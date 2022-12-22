@@ -32,7 +32,7 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
+        android:inputType="textPersonName"
         android:layout_centerVertical="true"
         android:text="@string/username"
         android:textColor="#FFFFFF"
@@ -42,7 +42,8 @@
         android:padding="20dp"
         tools:ignore="LabelFor"
         android:drawableStart="@drawable/ic_baseline_person_24"
-        android:drawablePadding="20dp"/>
+        android:drawablePadding="20dp"
+        android:autofillHints="Enter your user name" />
 
     <TextView
         android:id="@+id/break_up"
@@ -69,5 +70,6 @@
         android:textSize="25sp"
         android:backgroundTint="@color/white"
         android:textColor="#C87B5B"/>
+
 
 </RelativeLayout>
