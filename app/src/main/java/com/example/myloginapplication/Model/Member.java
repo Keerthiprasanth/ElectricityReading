@@ -3,7 +3,19 @@ package com.example.myloginapplication.Model;
 import android.os.Parcelable;
 
 public class Member {
-    private String username,emailId,password;
+    private String username;
+    private String emailId;
+    private String password;
+
+    public String getConfirmpassword() {
+        return confirmpassword;
+    }
+
+    public void setConfirmpassword(String confirmpassword) {
+        this.confirmpassword = confirmpassword;
+    }
+
+    private String confirmpassword;
 
     public String getUsername() {
         return username;

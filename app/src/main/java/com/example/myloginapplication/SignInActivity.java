@@ -1,5 +1,7 @@
 package com.example.myloginapplication;
 
+import static com.example.myloginapplication.RegisterActivity.memberList;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,7 +19,7 @@ import java.util.List;
 public class SignInActivity extends AppCompatActivity {
     Member member;
     private static final List<Member> membersList = new ArrayList<>();
-    String name,username;
+    String name,pswrd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +28,12 @@ public class SignInActivity extends AppCompatActivity {
         TextView username = findViewById(R.id.username);
         TextView password = findViewById(R.id.password);
 
-        name = username.getText().toString();
-        this.member = new Member();
-        member.setUsername("Raj");
-        membersList.add(member);
-        Toast.makeText(SignInActivity.this,"Welcome "+name ,Toast.LENGTH_LONG).show();
-        member.setPassword("admin");
+
+//        this.member = new Member();
+//        member.setUsername("Raj");
+//        membersList.add(member);
+        Toast.makeText(SignInActivity.this,"Sign in page!" ,Toast.LENGTH_LONG).show();
+//        member.setPassword("admin");
 
 
 
@@ -40,10 +42,11 @@ public class SignInActivity extends AppCompatActivity {
         signinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (Member member: membersList) {
+//                name = username.getText().toString();
+//                pswrd = password.getText().toString();
+                for (Member member: memberList) {
                     if (username.getText().toString().equals(member.getUsername()) && password.getText().toString().equals(member.getPassword())) {
                         Toast.makeText(SignInActivity.this, "Welcome to Break Up! "+member.getUsername(), Toast.LENGTH_LONG).show();
-                        openhome();
                     } else {
                         Toast.makeText(SignInActivity.this, "Enter valid credentials", Toast.LENGTH_LONG).show();
                     }

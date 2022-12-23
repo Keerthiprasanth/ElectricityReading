@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +16,8 @@ import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
-    private static final List<Member> memberList = new ArrayList<>();
-    String name,username,password,confirmpassword;
+    static final List<Member> memberList = new ArrayList<>();
+    String name,email,password,confirmpassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,17 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                name = registrationname.getText().toString();
+                email = registermail.getText().toString();
+                password = registerpassword.getText().toString();
+                confirmpassword = registerconfirmpassword.getText().toString();
+                Member member = new Member();
+                member.setUsername(name);
+                memberList.add(member);
+                member.setPassword(password);
+                member.setEmailId(email);
+                member.setConfirmpassword(confirmpassword);
+                Toast.makeText(RegisterActivity.this, "Welcome "+ member.getUsername()+" you're a registered user!", Toast.LENGTH_LONG).show();
                 opensignin();
             }
         });
