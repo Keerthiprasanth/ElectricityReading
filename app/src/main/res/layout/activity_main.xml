@@ -13,20 +13,23 @@
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="false"
         android:layout_below="@id/username"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:autofillHints=""
+        android:drawableStart="@drawable/ic_baseline_password_24"
+        android:drawablePadding="20dp"
         android:ems="10"
         android:inputType="textPassword"
+        android:padding="20dp"
         android:singleLine="false"
         android:soundEffectsEnabled="true"
         android:text="@string/password"
         android:textColor="#FFFFFF"
         android:textColorLink="#FFFFFF"
         android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:padding="20dp"
-        tools:ignore="LabelFor,TextFields"
-        android:drawableStart="@drawable/ic_baseline_password_24"
-        android:drawablePadding="20dp"/>
+        tools:ignore="LabelFor,TextFields" />
 
     <EditText
         android:id="@+id/username"
@@ -49,6 +52,10 @@
         android:id="@+id/break_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
         android:fontFamily="serif"
         android:text="WELCOME TO BREAK UP"
         android:textAlignment="center"
@@ -56,8 +63,7 @@
         android:textSize="40sp"
         android:textStyle="bold|italic"
         android:typeface="sans"
-        tools:text="WELCOME TO BREAK UP"
-        android:layout_margin="50dp"/>
+        tools:text="WELCOME TO BREAK UP" />
 
     <Button
         android:id="@+id/signinbtn"

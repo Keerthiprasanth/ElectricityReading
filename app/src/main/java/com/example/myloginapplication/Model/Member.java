@@ -1,9 +1,9 @@
 package com.example.myloginapplication.Model;
 
+import android.os.Parcelable;
+
 public class Member {
-    private String username;
-    private String emailId;
-    private String password;
+    private String username,emailId,password;
 
     public String getUsername() {
         return username;
