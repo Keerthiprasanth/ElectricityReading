@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextView registerAddress = findViewById(R.id.registeraddress);
         TextView registernoofrooms = findViewById(R.id.registernoofrooms);
         TextView registerevc = findViewById(R.id.registerevc);
+        TextView btn = findViewById(R.id.texthaveacc);
 
         Spinner propertyType = findViewById(R.id.propertytype);
 //        AutoCompleteTextView spinType = findViewById(R.id.spin);
@@ -82,5 +83,17 @@ public class RegisterActivity extends AppCompatActivity {
                         +member.getEmailId(), Toast.LENGTH_LONG).show();
             }
         });
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                opensignin();
+            }
+        });
+    }
+
+    public void opensignin(){
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     }
 }

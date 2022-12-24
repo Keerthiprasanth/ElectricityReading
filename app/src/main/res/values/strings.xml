@@ -12,4 +12,5 @@
     <string name="energy_voucher_code_evc">Energy Voucher Code(EVC)</string>
     <string name="customer_registration">CUSTOMER REGISTRATION</string>
     <string name="customer_login">CUSTOMER LOGIN</string>
+    <string name="select_your_property_type">Select your property type</string>
 </resources>

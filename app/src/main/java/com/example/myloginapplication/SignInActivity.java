@@ -4,6 +4,7 @@ import static com.example.myloginapplication.RegisterActivity.memberList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +22,9 @@ public class SignInActivity extends AppCompatActivity {
 
         TextView email = findViewById(R.id.email);
         TextView password = findViewById(R.id.password);
+        TextView btn = findViewById(R.id.textnoacc);
 
-        Button signinbtn = findViewById(R.id.signupbtn);
+        Button signinbtn = findViewById(R.id.loginbtn);
 
         signinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,5 +45,17 @@ public class SignInActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openregister();
+            }
+        });
+    }
+
+    public void openregister(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 }

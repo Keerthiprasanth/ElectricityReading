@@ -29,10 +29,12 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="75dp"
         android:layout_marginEnd="50dp"
+        android:background="@drawable/corner_bg"
         android:drawableStart="@drawable/ic_baseline_email_24"
         android:drawablePadding="20dp"
         android:hint="@string/email_id"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:minHeight="50dp" />
 
     <EditText
         android:id="@+id/password"
@@ -42,27 +44,42 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="50dp"
+        android:background="@drawable/corner_bg"
         android:drawableStart="@drawable/ic_baseline_password_24"
         android:drawablePadding="20dp"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:singleLine="false" />
+        android:minHeight="50dp" />
 
     <Button
-        android:id="@+id/signupbtn"
-        android:layout_width="wrap_content"
+        android:id="@+id/loginbtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:backgroundTint="@color/black"
         android:paddingLeft="25dp"
         android:paddingTop="10dp"
         android:paddingRight="25dp"
         android:paddingBottom="10dp"
         android:text="@string/sign_in"
-        android:textColor="@color/white"
-        android:textSize="25sp" />
+        android:textColor="@color/white" />
 
+    <TextView
+        android:id="@+id/textnoacc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginbtn"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="Don't have an account? Sign up"
+        android:textSize="12sp"/>
 
 </RelativeLayout>
