@@ -3,19 +3,8 @@ package com.example.myloginapplication.Model;
 import android.os.Parcelable;
 
 public class Member {
-    private String username;
-    private String emailId;
-    private String password;
-
-    public String getConfirmpassword() {
-        return confirmpassword;
-    }
-
-    public void setConfirmpassword(String confirmpassword) {
-        this.confirmpassword = confirmpassword;
-    }
-
-    private String confirmpassword;
+    private String username,emailId,password,address,evc,propertytype;
+    private String noofrooms;
 
     public String getUsername() {
         return username;
@@ -39,5 +28,37 @@ public class Member {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPropertytype() {
+        return propertytype;
+    }
+
+    public void setPropertytype(String propertytype) {
+        this.propertytype = propertytype;
+    }
+
+    public String getEvc() {
+        return evc;
+    }
+
+    public void setEvc(String evc) {
+        this.evc = evc;
+    }
+
+    public String getNoofrooms() {
+        return noofrooms;
+    }
+
+    public void setNoofrooms(String noofrooms) {
+        this.noofrooms = noofrooms;
     }
 }

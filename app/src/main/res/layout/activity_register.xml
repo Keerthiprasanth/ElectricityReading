@@ -16,13 +16,10 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:fontFamily="serif"
-        android:text="WELCOME TO BREAK UP"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="40sp"
-        android:textStyle="bold|italic"
-        android:typeface="sans"
-        tools:text="WELCOME TO BREAK UP" />
+        android:textSize="25sp"
+        android:text="@string/customer_registration" />
 
     <EditText
         android:id="@+id/registrationname"
@@ -30,35 +27,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/break_up"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="50dp"
         android:drawableStart="@drawable/ic_baseline_person_24"
         android:drawablePadding="20dp"
-        android:ems="10"
-        android:hint="@string/username"
+        android:hint="@string/name"
         android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/registermail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:minHeight="48dp" />
 
-    <Button
-        android:id="@+id/registerbtn"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/registermail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/registerconfirmpassword"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="25dp"
-        android:backgroundTint="@color/black"
-        android:paddingLeft="25dp"
-        android:paddingTop="10dp"
-        android:paddingRight="25dp"
-        android:paddingBottom="10dp"
-        android:text="Sign Up"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="494dp" />
+        android:layout_below="@id/registrationname"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:drawableStart="@drawable/ic_baseline_email_24"
+        android:drawablePadding="20dp"
+        android:hint="@string/email_id"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/registerpassword"
@@ -67,49 +55,95 @@
         android:layout_below="@id/registermail"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:layout_marginTop="10dp"
         android:drawableStart="@drawable/ic_baseline_password_24"
         android:drawablePadding="20dp"
-        android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="326dp" />
+        android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/registerconfirmpassword"
+        android:id="@+id/registeraddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/registerpassword"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="50dp"
-        android:drawableStart="@drawable/ic_baseline_password_24"
+        android:drawableStart="@drawable/ic_baseline_house_24"
         android:drawablePadding="20dp"
-        android:ems="10"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="326dp" />
+        android:hint="@string/address"
+        android:inputType="textPostalAddress" />
 
     <EditText
-        android:id="@+id/registermail"
+        android:id="@+id/registernoofrooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/registrationname"
+        android:layout_below="@id/registeraddress"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="25dp"
-        android:drawableStart="@drawable/ic_baseline_email_24"
+        android:drawableStart="@drawable/ic_baseline_bedroom_child_24"
         android:drawablePadding="20dp"
-        android:ems="10"
-        android:hint="@string/email_id"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/registerpassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registrationname" />
+        android:hint="@string/number_of_bedrooms"
+        android:inputType="text|number" />
+
+    <EditText
+        android:id="@+id/registerevc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registernoofrooms"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:drawableStart="@drawable/ic_baseline_credit_card_24"
+        android:drawablePadding="20dp"
+        android:hint="@string/energy_voucher_code_evc"
+        android:inputType="text" />
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="50dp"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginEnd="50dp"-->
+<!--        android:layout_below="@+id/registeraddress">-->
+
+<!--        <AutoCompleteTextView-->
+<!--        android:id="@+id/spin"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:hint="Spin type" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+    <Spinner
+        style="@style/Widget.AppCompat.Spinner"
+        android:id="@+id/propertytype"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/registerbtn"
+        android:background="@android:drawable/btn_dropdown"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="5dp"
+        android:spinnerMode="dialog"
+        android:hint="@string/property_type" />
+
+    <Button
+        android:id="@+id/registerbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/black"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="10dp"
+        android:text="@string/sign_up"
+        tools:layout_editor_absoluteX="163dp"
+        tools:layout_editor_absoluteY="494dp" />
+
+
 </RelativeLayout>

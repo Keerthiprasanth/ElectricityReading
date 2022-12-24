@@ -4,4 +4,12 @@
     <string name="username">Username</string>
     <string name="sign_in">Sign In</string>
     <string name="email_id">Email ID</string>
+    <string name="address">Address</string>
+    <string name="property_type">Property Type</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="number_of_bedrooms">Number of Bedrooms</string>
+    <string name="energy_voucher_code_evc">Energy Voucher Code(EVC)</string>
+    <string name="customer_registration">CUSTOMER REGISTRATION</string>
+    <string name="customer_login">CUSTOMER LOGIN</string>
 </resources>

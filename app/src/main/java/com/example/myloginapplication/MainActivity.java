@@ -6,13 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.myloginapplication.Model.Member;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -20,18 +13,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);
 
-        signinbtn.setOnClickListener(new View.OnClickListener() {
+        signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openregister();
             }
         });
 
+        signinbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                opensignin();
+            }
+        });
+
     }
     public void openregister(){
         Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    public void opensignin(){
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
 }
