@@ -1,5 +1,6 @@
 package com.example.myloginapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,9 +12,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myloginapplication.Model.Member;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextView registernoofrooms = findViewById(R.id.registernoofrooms);
         TextView registerevc = findViewById(R.id.registerevc);
         TextView btn = findViewById(R.id.texthaveacc);
+        TextView scanner = findViewById(R.id.scanner);
 
         Spinner propertyType = findViewById(R.id.propertytype);
 //        AutoCompleteTextView spinType = findViewById(R.id.spin);
@@ -56,6 +62,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 Toast.makeText(RegisterActivity.this, "Select your property type", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        scanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                qrscanner();
             }
         });
         Button registerbtn = findViewById(R.id.registerbtn);
@@ -91,6 +104,28 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void qrscanner(){
+        ScanOptions options = new ScanOptions();
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(CaptureAct.class);
+        barLauncher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+            builder.setTitle("Result");
+            builder.setMessage(result.getContents());
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }).show();
+        }
+    });
 
     public void opensignin(){
         Intent intent = new Intent(this, SignInActivity.class);

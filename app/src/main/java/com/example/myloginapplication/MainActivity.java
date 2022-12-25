@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);
+        Button dashboard = findViewById(R.id.dashboardbtn);
 
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
                 opensignin();
             }
         });
+
+        dashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                opendashboard();
+            }
+        });
     }
 
     public void openregister(){
@@ -39,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void opensignin(){
         Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    public void opendashboard(){
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 }
