@@ -20,7 +20,7 @@
         android:text="Customer Dashboard" />
 
     <TextView
-        android:id="@+id/textpropertytype"
+        android:id="@+id/textdetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/datebtn"
