@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,12 +33,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        TextView registerName = findViewById(R.id.registrationname);
-        TextView registerMail = findViewById(R.id.registermail);
-        TextView registerPassword = findViewById(R.id.registerpassword);
-        TextView registerAddress = findViewById(R.id.registeraddress);
-        TextView registernoofrooms = findViewById(R.id.registernoofrooms);
-        TextView registerevc = findViewById(R.id.registerevc);
+        EditText registerName = findViewById(R.id.registrationname);
+        EditText registerMail = findViewById(R.id.registermail);
+        EditText registerPassword = findViewById(R.id.registerpassword);
+        EditText registerAddress = findViewById(R.id.registeraddress);
+        EditText registernoofrooms = findViewById(R.id.registernoofrooms);
+        EditText registerevc = findViewById(R.id.registerevc);
         TextView btn = findViewById(R.id.texthaveacc);
         TextView scanner = findViewById(R.id.scanner);
 
