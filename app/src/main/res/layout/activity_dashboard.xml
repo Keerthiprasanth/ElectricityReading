@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#603241">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#E1B1B1"
+    tools:context=".DashboardActivity">
 
 
     <TextView
@@ -30,8 +32,8 @@
         android:layout_marginBottom="10dp"
         android:fontFamily="serif"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:text="Enter the following details"
+        android:textColor="@color/black"
+        android:text="Enter the following fields to update current details"
         android:textSize="18sp"/>
 
     <TextView
@@ -42,12 +44,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
-        android:hint="  Submission Date"
-        android:textSize="18sp"
+        android:hint="Submission Date in (MM/DD/YY) format"
+        android:paddingStart="10dp"
+        android:textSize="15sp"
         android:layout_above="@+id/textday"
         android:layout_centerHorizontal="true"
         android:minHeight="50dp"
-        android:paddingTop="10dp"/>
+        android:padding="15dp"/>
 
     <EditText
         android:id="@+id/textday"
@@ -58,9 +61,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
-        android:hint="  Electricity meter reading during day (kWh)"
-        android:textSize="18sp"
-        android:inputType="text|number"
+        android:hint="Electricity meter reading during day (kWh)"
+        android:paddingStart="10dp"
+        android:textSize="15sp"
+        android:inputType="numberDecimal"
         android:minHeight="50dp" />
 
     <EditText
@@ -72,8 +76,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
-        android:hint="  Electricity meter reading during night (kWh)"
-        android:textSize="18sp"
+        android:hint="Electricity meter reading during night (kWh)"
+        android:paddingStart="10dp"
+        android:textSize="15sp"
         android:inputType="text|number"
         android:minHeight="50dp" />
 
@@ -86,8 +91,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
-        android:hint="  Gas meter reading (kWh)"
-        android:textSize="18sp"
+        android:hint="Gas meter reading (kWh)"
+        android:paddingStart="10dp"
+        android:textSize="15sp"
         android:inputType="text|number"
         android:minHeight="50dp" />
 
@@ -107,5 +113,6 @@
         android:paddingRight="25dp"
         android:paddingBottom="10dp"
         android:text="Submit" />
+
 
 </RelativeLayout>

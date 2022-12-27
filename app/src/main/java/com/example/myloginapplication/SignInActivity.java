@@ -40,6 +40,7 @@ public class SignInActivity extends AppCompatActivity {
                 }
                 if(flag==1){
                     Toast.makeText(SignInActivity.this, "Welcome to Break Up! "+member1.getUsername(), Toast.LENGTH_LONG).show();
+                    opendashboard();
                 }else{
                     Toast.makeText(SignInActivity.this, "Enter valid credentials", Toast.LENGTH_SHORT).show();
                 }
@@ -56,6 +57,11 @@ public class SignInActivity extends AppCompatActivity {
 
     public void openregister(){
         Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    public void opendashboard(){
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 }

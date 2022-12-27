@@ -1,19 +1,17 @@
 package com.example.myloginapplication;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myloginapplication.Model.Member;
@@ -26,7 +24,8 @@ import java.util.List;
 public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
-    String name,email,password,address,type,rooms,evc;
+    String name, email, password, address, type, rooms, evc, evcscan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
                 address = registerAddress.getText().toString();
                 rooms = registernoofrooms.getText().toString();
                 evc = registerevc.getText().toString();
+                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+                    return;
+                }
                 Member member = new Member();
                 member.setUsername(name);
                 memberList.add(member);
@@ -91,9 +93,10 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setPropertytype(type);
                 member.setEvc(evc);
                 member.setNoofrooms(rooms);
-                Toast.makeText(RegisterActivity.this, "Welcome "+ member.getUsername()
-                        +member.getAddress()+member.getEvc()+member.getPropertytype()+member.getNoofrooms()
-                        +member.getEmailId(), Toast.LENGTH_LONG).show();
+                opendashboard();
+                Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
+                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
+                        + member.getEmailId(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -105,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void qrscanner(){
+    private void qrscanner() {
         ScanOptions options = new ScanOptions();
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
@@ -114,21 +117,56 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if(result.getContents() != null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+        if (result.getContents() != null) {
+            TextView registerevc = findViewById(R.id.registerevc);
+            registerevc.setText(result.getContents());
+//            evcset(result.getContents());
+//            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+//            builder.setTitle("Result");
+//            builder.setMessage(result.getContents());
+//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    evcset(result.getContents());
+//                    dialogInterface.dismiss();
+//                }
+//            }).show();
+//            member.setEvc(evcscan);
+//            Toast.makeText( RegisterActivity.this, member.getEvc(), Toast.LENGTH_LONG).show();
         }
     });
 
+    private boolean validatefields(TextView registerName, TextView registerAddress, TextView registerPassword, TextView registerMail, TextView registernoofrooms) {
+        if (name.isEmpty()) {
+            registerName.setError("Please enter your name");
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            registerMail.setError("Please enter a valid Email ID");
+        }
+        if (password.isEmpty()) {
+            registerPassword.setError("Please create a new password");
+        }
+        if (address.isEmpty()) {
+            registerAddress.setError("Please enter your address");
+        }
+        if (rooms.isEmpty()) {
+            registernoofrooms.setError("This is a required field");
+        }
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && !password.isEmpty() && !address.isEmpty() && !rooms.isEmpty();
+    }
+
+//    public void evcset(String evcset){
+//        TextView registerevc = findViewById(R.id.registerevc);
+//        registerevc.setText(evcset);
+//    }
+
     public void opensignin(){
         Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    public void opendashboard(){
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 }
