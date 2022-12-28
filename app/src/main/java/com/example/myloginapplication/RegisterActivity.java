@@ -20,17 +20,18 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
-    String name, email, password, address, type, rooms, evc, evcscan;
+    String name, email, password, address, type, evc;
+    int rooms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         TextView registerName = findViewById(R.id.registrationname);
         TextView registerMail = findViewById(R.id.registermail);
         TextView registerPassword = findViewById(R.id.registerpassword);
@@ -79,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 email = registerMail.getText().toString();
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
-                rooms = registernoofrooms.getText().toString();
+                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
@@ -143,16 +144,16 @@ public class RegisterActivity extends AppCompatActivity {
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             registerMail.setError("Please enter a valid Email ID");
         }
-        if (password.isEmpty()) {
-            registerPassword.setError("Please create a new password");
+        if (!passwordValidation(password)) {
+            registerPassword.setError("Please create valid password (Eg: Abcd@123");
         }
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        if (rooms.isEmpty()) {
+        if (rooms < 1) {
             registernoofrooms.setError("This is a required field");
         }
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && !password.isEmpty() && !address.isEmpty() && !rooms.isEmpty();
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !(rooms < 1);
     }
 
 //    public void evcset(String evcset){
@@ -168,5 +169,10 @@ public class RegisterActivity extends AppCompatActivity {
     public void opendashboard(){
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
+    }
+
+    public boolean passwordValidation(String password) {
+        String passwordRegex = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
+        return Pattern.matches(passwordRegex, password);
     }
 }

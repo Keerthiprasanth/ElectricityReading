@@ -47,6 +47,8 @@
         android:hint="Submission Date in (MM/DD/YY) format"
         android:paddingStart="10dp"
         android:textSize="15sp"
+        android:inputType="date"
+        android:focusable="false"
         android:layout_above="@+id/textday"
         android:layout_centerHorizontal="true"
         android:minHeight="50dp"

@@ -1,10 +1,8 @@
 package com.example.myloginapplication.Model;
 
-import android.os.Parcelable;
-
 public class Member {
     private String username,emailId,password,address,evc,propertytype;
-    private String noofrooms;
+    private int noofrooms;
 
     public String getUsername() {
         return username;
@@ -54,11 +52,11 @@ public class Member {
         this.evc = evc;
     }
 
-    public String getNoofrooms() {
+    public int getNoofrooms() {
         return noofrooms;
     }
 
-    public void setNoofrooms(String noofrooms) {
+    public void setNoofrooms(int noofrooms) {
         this.noofrooms = noofrooms;
     }
 }
