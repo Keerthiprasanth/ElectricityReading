@@ -3,11 +3,11 @@ package com.example.myloginapplication;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+//import com.mongodb.MongoClientSettings;
+//import com.mongodb.client.MongoClient;
+//import com.mongodb.client.MongoClients;
+//import com.mongodb.client.MongoCollection;
+//import com.mongodb.client.MongoDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +28,9 @@ import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
 
 public class MainActivity extends AppCompatActivity {
     Realm uiThreadRealm;
@@ -49,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
 
 
-//        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-//                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-//        MongoClient mongoClient = MongoClients.create("mongodb+srv://breakup:breakup@cluster0.p3rjm4h.mongodb.net/splitdb?retryWrites=true&w=majority");
-//        MongoDatabase database = mongoClient.getDatabase("splitdb");
-//        database = database.withCodecRegistry(pojoCodecRegistry);
+        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
+                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://breakup:breakup@cluster0.p3rjm4h.mongodb.net/splitdb?retryWrites=true&w=majority");
+        MongoDatabase database = mongoClient.getDatabase("splitdb");
+        database = database.withCodecRegistry(pojoCodecRegistry);
 
         MongoDatabase finalDatabase = database;
         signupbtn.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openregister(MongoDatabase mongoDatabase){
-        mongoDatabase.createCollection("test");
+//        mongoDatabase.createCollection("test");
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
