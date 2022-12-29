@@ -19,6 +19,8 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -30,7 +32,6 @@ import io.realm.mongodb.mongo.MongoDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
-    static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
     MongoDatabase mongoDatabase;
@@ -86,6 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                member = new Member();
+                List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
                 email = registerMail.getText().toString();
@@ -97,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 Log.v("BTN","Called validate fields");
-                member = new Member();
                 member.setUsername(name);
                 memberList.add(member);
                 member.setPassword(password);
@@ -111,22 +113,31 @@ public class RegisterActivity extends AppCompatActivity {
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
 
-                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class);
-                mongoCollection.insertOne(member).getAsync(result -> {
-                    if(result.isSuccess()){
-                        Log.v("Data","Data inserted");
-                    }else{
-                        Log.v("Data","Error:"+result.getError().toString());
-                    }
-                });
-                Log.v("BTN","Passed collection");
-//                mongoCollection.insertOne(new Document("memberID",user.getId()).append("Data",name)).getAsync(result -> {
+                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+//                mongoCollection.insertOne(member).getAsync(result -> {
 //                    if(result.isSuccess()){
 //                        Log.v("Data","Data inserted");
 //                    }else{
 //                        Log.v("Data","Error:"+result.getError().toString());
 //                    }
 //                });
+                Log.v("BTN","Passed collection");
+//                mongoCollection.insertOne(new Document().append("Data",name)).getAsync(result -> {
+//                    if(result.isSuccess()){
+//                        Log.v("Data","Data inserted");
+//                    }else{
+//                        Log.v("Data","Error:"+result.getError().toString());
+//                    }
+//                });
+//                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+
+                mongoCollection.insertOne(new org.bson.Document("memberID",user.getId()).append("Data",name)).getAsync(result -> {
+                    if(result.isSuccess()){
+                        Log.v("Data","Data inserted");
+                    }else{
+                        Log.v("Data","Error:"+result.getError().toString());
+                    }
+                });
             }
         });
 

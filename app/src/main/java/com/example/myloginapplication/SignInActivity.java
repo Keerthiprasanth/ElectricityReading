@@ -1,7 +1,5 @@
 package com.example.myloginapplication;
 
-import static com.example.myloginapplication.RegisterActivity.memberList;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,8 +11,12 @@ import android.widget.Toast;
 
 import com.example.myloginapplication.Model.Member;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SignInActivity extends AppCompatActivity {
     int flag=0;
+    List<Member> memberList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
