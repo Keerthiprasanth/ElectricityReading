@@ -28,24 +28,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Realm.init(this);
-//        app =new App(new AppConfiguration.Builder(appId).build());
-//
-//        Credentials credentials = Credentials.anonymous();
-//        app.loginAsync(credentials, new App.Callback<User>() {
-//            @Override
-//            public void onResult(App.Result<User> result) {
-//                if(result.isSuccess()){
-//                    Log.v("User","Logged in anonymously");
-//                }else{
-//                    Log.v("User","Failed to login");
-//                }
-//            }
-//        });
-//
-//        user= app.currentUser();
-//        mongoClient = user.getMongoClient("mongodb-atlas");
-//        mongoDatabase = mongoClient.getDatabase("electricity");
+        Realm.init(this);
+        app =new App(new AppConfiguration.Builder(appId).build());
+
+        Credentials credentials = Credentials.anonymous();
+        app.loginAsync(credentials, new App.Callback<User>() {
+            @Override
+            public void onResult(App.Result<User> result) {
+                if(result.isSuccess()){
+                    Log.v("User","Logged in anonymously");
+                }else{
+                    Log.v("User","Failed to login");
+                }
+            }
+        });
+
+        user= app.currentUser();
+        mongoClient = user.getMongoClient("mongodb-atlas");
+        mongoDatabase = mongoClient.getDatabase("electricity");
 
         Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);

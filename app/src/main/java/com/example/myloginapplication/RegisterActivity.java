@@ -19,8 +19,6 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -35,9 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
-//    MongoDatabase mongoDatabase;
-//    MongoClient mongoClient;
-//    User user;
+    MongoDatabase mongoDatabase;
+    MongoClient mongoClient;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +91,13 @@ public class RegisterActivity extends AppCompatActivity {
                 email = registerMail.getText().toString();
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
-                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
                 }
                 Log.v("BTN","Called validate fields");
-                Member member = new Member();
+                member = new Member();
                 member.setUsername(name);
                 memberList.add(member);
                 member.setPassword(password);
@@ -113,8 +111,14 @@ public class RegisterActivity extends AppCompatActivity {
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
 
-//                MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("member");
-//                mongoCollection.insertOne(member);
+                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class);
+                mongoCollection.insertOne(member).getAsync(result -> {
+                    if(result.isSuccess()){
+                        Log.v("Data","Data inserted");
+                    }else{
+                        Log.v("Data","Error:"+result.getError().toString());
+                    }
+                });
                 Log.v("BTN","Passed collection");
 //                mongoCollection.insertOne(new Document("memberID",user.getId()).append("Data",name)).getAsync(result -> {
 //                    if(result.isSuccess()){
@@ -175,10 +179,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        if (rooms < 1) {
-            registernoofrooms.setError("This is a required field");
-        }
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !(rooms < 1);
+        validaterooms(registernoofrooms);
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !validaterooms(registernoofrooms);
     }
 
 //    public void evcset(String evcset){
@@ -199,5 +201,21 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean passwordValidation(String password) {
         String passwordRegex = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
         return Pattern.matches(passwordRegex, password);
+    }
+
+    public boolean validaterooms(TextView registernoofrooms){
+        try {
+            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
+//                Log.v("Result","It is a number");
+                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+                return true;
+            }
+        }catch (NumberFormatException ex){
+//            Log.v("Result","Not a number");
+            registernoofrooms.setText("1");
+            rooms = Integer.parseInt(registernoofrooms.getText().toString());
+            registernoofrooms.setError("Rooms should not be less than 1");
+        }
+        return false;
     }
 }
