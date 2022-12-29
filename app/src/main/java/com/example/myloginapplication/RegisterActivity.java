@@ -2,6 +2,7 @@ package com.example.myloginapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,20 +19,31 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.bson.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
+//    MongoDatabase mongoDatabase;
+//    MongoClient mongoClient;
+//    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         TextView registerName = findViewById(R.id.registrationname);
         TextView registerMail = findViewById(R.id.registermail);
         TextView registerPassword = findViewById(R.id.registerpassword);
@@ -76,6 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
                 email = registerMail.getText().toString();
                 password = registerPassword.getText().toString();
@@ -85,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
                 }
+                Log.v("BTN","Called validate fields");
                 Member member = new Member();
                 member.setUsername(name);
                 memberList.add(member);
@@ -98,6 +112,17 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
+
+//                MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("member");
+//                mongoCollection.insertOne(member);
+                Log.v("BTN","Passed collection");
+//                mongoCollection.insertOne(new Document("memberID",user.getId()).append("Data",name)).getAsync(result -> {
+//                    if(result.isSuccess()){
+//                        Log.v("Data","Data inserted");
+//                    }else{
+//                        Log.v("Data","Error:"+result.getError().toString());
+//                    }
+//                });
             }
         });
 
