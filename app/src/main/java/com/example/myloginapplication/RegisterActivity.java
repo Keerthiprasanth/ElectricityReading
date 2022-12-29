@@ -1,7 +1,9 @@
 package com.example.myloginapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
+    TextView registernoofrooms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextView registerMail = findViewById(R.id.registermail);
         TextView registerPassword = findViewById(R.id.registerpassword);
         TextView registerAddress = findViewById(R.id.registeraddress);
-        TextView registernoofrooms = findViewById(R.id.registernoofrooms);
+        registernoofrooms = findViewById(R.id.registernoofrooms);
         TextView registerevc = findViewById(R.id.registerevc);
         TextView btn = findViewById(R.id.texthaveacc);
         TextView scanner = findViewById(R.id.scanner);
@@ -80,7 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
                 email = registerMail.getText().toString();
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
-                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+                validaterooms(registernoofrooms);
                 evc = registerevc.getText().toString();
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
@@ -137,6 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     });
 
+    @SuppressLint("ResourceType")
     private boolean validatefields(TextView registerName, TextView registerAddress, TextView registerPassword, TextView registerMail, TextView registernoofrooms) {
         if (name.isEmpty()) {
             registerName.setError("Please enter your name");
@@ -150,11 +155,18 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        if (rooms < 1) {
-            registernoofrooms.setError("This is a required field");
-        }
+//        validaterooms(rooms);
+//        try {
+//            if (rooms < 1) {
+//                registernoofrooms.setError("This is a required field");
+//            }
+//        }catch (NumberFormatException e){
+//            Log.v("Result","Not a number");
+//            registernoofrooms.setText("1");
+//        }
         return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !(rooms < 1);
     }
+
 
 //    public void evcset(String evcset){
 //        TextView registerevc = findViewById(R.id.registerevc);
@@ -175,4 +187,18 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordRegex = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
         return Pattern.matches(passwordRegex, password);
     }
+    public void validaterooms(TextView registernoofrooms){
+        try {
+            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
+//                Log.v("Result","It is a number");
+                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+            }
+        }catch (NumberFormatException ex){
+//            Log.v("Result","Not a number");
+            registernoofrooms.setText("1");
+            rooms = Integer.parseInt(registernoofrooms.getText().toString());
+            registernoofrooms.setError("Rooms should not be less than 1");
+        }
+    }
+
 }
