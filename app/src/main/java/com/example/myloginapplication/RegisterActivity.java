@@ -20,15 +20,32 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
+
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.User;
+import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
-    int rooms;
+    int rooms=1;
+    MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
+    MongoClient mongoClient = MainActivity.mongoClient;
+    User user;
     TextView registernoofrooms;
 
     @Override
@@ -79,8 +96,11 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Member member = new Member();
+                List<Member> memberList = new ArrayList<>();
+                Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
-                email = registerMail.getText().toString();
+                email = registerMail.getText().toString().toLowerCase(Locale.ROOT);
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
@@ -89,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
                 }
-                Member member = new Member();
                 member.setUsername(name);
                 memberList.add(member);
                 member.setPassword(password);
@@ -102,6 +121,18 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
+
+                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+                mongoCollection.insertOne(member).getAsync(result -> {
+                    if(result.isSuccess()){
+                        Log.v("Data","Data inserted");
+                    }else{
+                        Log.v("Data","Error:"+result.getError().toString());
+                    }
+                });
+                Log.v("BTN","Passed collection");
             }
         });
 
@@ -141,7 +172,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     });
 
-    @SuppressLint("ResourceType")
     private boolean validatefields(TextView registerName, TextView registerAddress, TextView registerPassword, TextView registerMail, TextView registernoofrooms) {
         if (name.isEmpty()) {
             registerName.setError("Please enter your name");
@@ -155,16 +185,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-//        validaterooms(rooms);
-//        try {
-//            if (rooms < 1) {
-//                registernoofrooms.setError("This is a required field");
-//            }
-//        }catch (NumberFormatException e){
-//            Log.v("Result","Not a number");
-//            registernoofrooms.setText("1");
-//        }
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !(rooms < 1);
+        validaterooms(registernoofrooms);
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !validaterooms(registernoofrooms);
     }
 
 
@@ -187,11 +209,14 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordRegex = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$";
         return Pattern.matches(passwordRegex, password);
     }
-    public void validaterooms(TextView registernoofrooms){
+
+    public boolean validaterooms(TextView registernoofrooms){
         try {
             if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
 //                Log.v("Result","It is a number");
                 rooms = Integer.parseInt(registernoofrooms.getText().toString());
+                member.setNoofrooms(rooms);
+                return true;
             }
         }catch (NumberFormatException ex){
 //            Log.v("Result","Not a number");
@@ -199,6 +224,7 @@ public class RegisterActivity extends AppCompatActivity {
             rooms = Integer.parseInt(registernoofrooms.getText().toString());
             registernoofrooms.setError("Rooms should not be less than 1");
         }
+        return false;
     }
 
 }
