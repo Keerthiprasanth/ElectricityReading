@@ -20,11 +20,16 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
+import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
@@ -93,14 +98,14 @@ public class RegisterActivity extends AppCompatActivity {
                 List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
-                email = registerMail.getText().toString();
+                email = registerMail.getText().toString().toLowerCase(Locale.ROOT);
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
-//                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
-//                    return;
-//                }
+                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+                    return;
+                }
                 Log.v("BTN","Called validate fields");
                 member.setUsername(name);
                 memberList.add(member);
@@ -111,9 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setEvc(evc);
                 member.setNoofrooms(rooms);
                 opendashboard();
-                Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
-                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
-                        + member.getEmailId(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
+//                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
+//                        + member.getEmailId(), Toast.LENGTH_LONG).show();
 
 
                 Document document = new Document();
@@ -125,28 +130,34 @@ public class RegisterActivity extends AppCompatActivity {
                 document.put("noofbedrooms",rooms);
                 document.put("propertytype",type);
 
-//                mongoDatabase = mongoClient.getDatabase("electricity");
-//                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class);
-//                mongoCollection.insertOne(member).getAsync(result -> {
-//                    if(result.isSuccess()){
-//                        Log.v("Data","Data inserted");
-//                    }else{
-//                        Log.v("Data","Error:"+result.getError().toString());
-//                    }
-//                });
-//                Log.v("BTN","Passed collection");
-
-
-                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
-                mongoCollection.insertOne(document).getAsync(result -> {
+                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+                mongoCollection.insertOne(member).getAsync(result -> {
                     if(result.isSuccess()){
                         Log.v("Data","Data inserted");
                     }else{
                         Log.v("Data","Error:"+result.getError().toString());
                     }
                 });
+                Log.v("BTN","Passed collection");
 
 
+//                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+//                mongoCollection.insertOne(document).getAsync(result -> {
+//                    if(result.isSuccess()){
+//                        Log.v("Data","Data inserted");
+//                    }else{
+//                        Log.v("Data","Error:"+result.getError().toString());
+//                    }
+//                });
+//
+//                Document document2 = new Document();
+//                mongoCollection.find(document2);
+//                document2.get("emailId","ram@gmail.com");
+//                String ram = (document2.get("password")).toString();
+
+//                Toast.makeText(RegisterActivity.this,"Ram's password is "+ram,Toast.LENGTH_LONG).show();
 //                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
 //                mongoCollection.insertOne(new org.bson.Document().append("Data",name)).getAsync(result -> {
 //                    if(result.isSuccess()){
