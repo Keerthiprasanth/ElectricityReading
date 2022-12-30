@@ -19,7 +19,7 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.w3c.dom.Document;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +29,15 @@ import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
     String name, email, password, address, type, evc;
-    int rooms;
-    MongoDatabase mongoDatabase;
-    MongoClient mongoClient;
+    int rooms = 1;
+    MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
+    MongoClient mongoClient = MainActivity.mongoClient;
     User user;
 
     @Override
@@ -87,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                member = new Member();
+                Member member = new Member();
                 List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
@@ -96,9 +98,9 @@ public class RegisterActivity extends AppCompatActivity {
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
-                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
-                    return;
-                }
+//                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+//                    return;
+//                }
                 Log.v("BTN","Called validate fields");
                 member.setUsername(name);
                 memberList.add(member);
@@ -113,7 +115,18 @@ public class RegisterActivity extends AppCompatActivity {
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
 
-                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+
+                Document document = new Document();
+                document.put("name", name);
+                document.put("emailId", email);
+                document.put("password",password);
+                document.put("address",address);
+                document.put("evc",evc);
+                document.put("noofbedrooms",rooms);
+                document.put("propertytype",type);
+
+//                mongoDatabase = mongoClient.getDatabase("electricity");
+//                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class);
 //                mongoCollection.insertOne(member).getAsync(result -> {
 //                    if(result.isSuccess()){
 //                        Log.v("Data","Data inserted");
@@ -121,23 +134,27 @@ public class RegisterActivity extends AppCompatActivity {
 //                        Log.v("Data","Error:"+result.getError().toString());
 //                    }
 //                });
-                Log.v("BTN","Passed collection");
-//                mongoCollection.insertOne(new Document().append("Data",name)).getAsync(result -> {
-//                    if(result.isSuccess()){
-//                        Log.v("Data","Data inserted");
-//                    }else{
-//                        Log.v("Data","Error:"+result.getError().toString());
-//                    }
-//                });
-//                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+//                Log.v("BTN","Passed collection");
 
-                mongoCollection.insertOne(new org.bson.Document("memberID",user.getId()).append("Data",name)).getAsync(result -> {
+
+                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+                mongoCollection.insertOne(document).getAsync(result -> {
                     if(result.isSuccess()){
                         Log.v("Data","Data inserted");
                     }else{
                         Log.v("Data","Error:"+result.getError().toString());
                     }
                 });
+
+
+//                MongoCollection<org.bson.Document> mongoCollection = mongoDatabase.getCollection("member");
+//                mongoCollection.insertOne(new org.bson.Document().append("Data",name)).getAsync(result -> {
+//                    if(result.isSuccess()){
+//                        Log.v("Data","Data inserted");
+//                    }else{
+//                        Log.v("Data","Error:"+result.getError().toString());
+//                    }
+//                });
             }
         });
 
@@ -219,6 +236,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
 //                Log.v("Result","It is a number");
                 rooms = Integer.parseInt(registernoofrooms.getText().toString());
+                member.setNoofrooms(rooms);
                 return true;
             }
         }catch (NumberFormatException ex){
