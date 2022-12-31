@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.myloginapplication.Model.Member;
+
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -21,12 +23,14 @@ import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
+import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 
 public class MainActivity extends AppCompatActivity {
     String appId = "application-0-joalz";
     static MongoDatabase mongoDatabase;
     static MongoClient mongoClient;
+    static MongoCollection<Member> mongoCollection;
     User user;
     static App app;
     @Override
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         user= app.currentUser();
         mongoClient = user.getMongoClient("mongodb-atlas");
         mongoDatabase = mongoClient.getDatabase("electricity");
+        CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+        mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
 //        mongoDatabase = mongoDatabase.withCodecRegistry(pojoCodecRegistry);
 
         Button signupbtn = findViewById(R.id.signupbtn);

@@ -1,15 +1,15 @@
 package com.example.myloginapplication.Model;
 
 public class Member {
-    private String username,emailId,password,address,evc,propertytype;
+    private String name,emailId,password,address,evc,propertytype;
     private int noofrooms;
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmailId() {

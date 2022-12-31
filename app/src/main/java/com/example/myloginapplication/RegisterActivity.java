@@ -1,6 +1,5 @@
 package com.example.myloginapplication;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +26,6 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.realm.mongodb.AppConfiguration;
@@ -45,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     int rooms=1;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     MongoClient mongoClient = MainActivity.mongoClient;
+    MongoCollection mongoCollection = MainActivity.mongoCollection;
     User user;
     TextView registernoofrooms;
 
@@ -104,12 +103,12 @@ public class RegisterActivity extends AppCompatActivity {
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
-                validaterooms(registernoofrooms);
                 evc = registerevc.getText().toString();
-                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
-                    return;
-                }
-                member.setUsername(name);
+//                validaterooms(registernoofrooms);
+//                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+//                    return;
+//                }
+                member.setName(name);
                 memberList.add(member);
                 member.setPassword(password);
                 member.setEmailId(email);
@@ -118,13 +117,13 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setEvc(evc);
                 member.setNoofrooms(rooms);
                 opendashboard();
-                Toast.makeText(RegisterActivity.this, "Welcome " + member.getUsername()
+                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
 
-                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
-                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+//                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+//                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
                 mongoCollection.insertOne(member).getAsync(result -> {
                     if(result.isSuccess()){
                         Log.v("Data","Data inserted");
@@ -133,6 +132,15 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
                 Log.v("BTN","Passed collection");
+//                Document queryFilter  = new Document("emailId", "steve@gmail.com");
+//                mongoCollection.findOne(queryFilter).getAsync(task -> {
+//                    if (task.isSuccess()) {
+//                        Member result = (Member) task.get();
+//                        Log.v("EXAMPLE", "successfully found a document: " + result + result.getPassword()+result.getName());
+//                    } else {
+//                        Log.e("EXAMPLE", "failed to find document with: ", task.getError());
+//                    }
+//                });
             }
         });
 
