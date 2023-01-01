@@ -1,5 +1,8 @@
 package com.example.myloginapplication;
 
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -16,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myloginapplication.Model.Member;
 import com.example.myloginapplication.Model.Readings;
 
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.w3c.dom.Text;
 
 import java.text.DateFormat;
@@ -23,9 +28,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.mongo.MongoCollection;
+import io.realm.mongodb.mongo.MongoDatabase;
+
 public class DashboardActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     double dayreading,nightreading,gasreading;
     static final List<Readings> readingList = new ArrayList<>();
+    MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     private DatePickerDialog datePickerDialog;
 
     @Override
@@ -60,6 +70,16 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                 readings.setGas(gasreading);
                 readingList.add(readings);
                 validatefields();
+                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+                MongoCollection<Readings> mongoCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
+                mongoCollection.insertOne(readings).getAsync(result -> {
+                    if(result.isSuccess()){
+                        Log.v("Data","Data inserted");
+                    }else{
+                        Log.v("Data","Error:"+result.getError().toString());
+                    }
+                });
                 Toast.makeText( DashboardActivity.this, "Reading values are "+String.valueOf(dayreading)
                         +String.valueOf(nightreading)+String.valueOf(gasreading), Toast.LENGTH_LONG).show();
 //                Toast.makeText( DashboardActivity.this, "Not set submit button yet", Toast.LENGTH_LONG).show();

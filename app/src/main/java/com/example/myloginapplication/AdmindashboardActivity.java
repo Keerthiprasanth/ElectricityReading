@@ -1,6 +1,11 @@
 package com.example.myloginapplication;
 
+import static com.example.myloginapplication.MainActivity.mongoDatabase;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,6 +14,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myloginapplication.Model.Admin;
+import com.example.myloginapplication.Model.Readings;
+
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
+
+import io.realm.mongodb.AppConfiguration;
+import io.realm.mongodb.mongo.MongoCollection;
 
 public class AdmindashboardActivity extends AppCompatActivity {
     double dayprize,nightprize,gasprize;
@@ -33,6 +45,16 @@ public class AdmindashboardActivity extends AppCompatActivity {
                 admin.setPriceNight(nightprize);
                 gasprize= Double.parseDouble(pricegas.getText().toString());
                 admin.setPriceGas(gasprize);
+                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+                MongoCollection<Admin> mongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
+                mongoCollection.insertOne(admin).getAsync(result -> {
+                    if(result.isSuccess()){
+                        Log.v("Data","Data inserted");
+                    }else{
+                        Log.v("Data","Error:"+result.getError().toString());
+                    }
+                });
                 Toast.makeText( AdmindashboardActivity.this, "Prize submitted", Toast.LENGTH_LONG).show();
             }
         });

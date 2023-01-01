@@ -3,6 +3,9 @@ package com.example.myloginapplication.Model;
 public class Member {
     private String name,emailId,password,address,evc,propertytype;
     private int noofrooms;
+    private boolean admin;
+
+
 
     public String getName() {
         return name;
@@ -58,5 +61,13 @@ public class Member {
 
     public void setNoofrooms(int noofrooms) {
         this.noofrooms = noofrooms;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.myloginapplication;
 
 import static com.example.myloginapplication.MainActivity.mongoCollection;
-import static com.example.myloginapplication.RegisterActivity.memberList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myloginapplication.Model.Member;
 
@@ -38,18 +36,40 @@ public class SignInActivity extends AppCompatActivity {
                 String mail = email.getText().toString().toLowerCase(Locale.ROOT);
                 String pswrd = password.getText().toString();
                 Document queryFilter  = new Document("emailId", mail);
+//                adminCollection.findOne(queryFilter).getAsync(task -> {
+//                    if(task.isSuccess()){
+//                        Access access = (Access) task.get();
+//                        if(pswrd.equals(access.getPassword())){
+//                            openAdmindashboard();
+//                        }
+//                    }else{
+//                        Log.v("Error",task.getError().toString());
+//                    }
+//                });
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
                         Member member = (Member) task.get();
                         Log.v("EXAMPLE", "successfully found a document: " + member + member.getPassword()+member.getName());
-                        if (pswrd.equals(member.getPassword())){
+                        if(member.isAdmin()){
+                            if (pswrd.equals(member.getPassword())){
 //                            flag = 1;
-                            opendashboard();
+                                openAdmindashboard();
+                            }
+                            else{
+                                password.setError("Enter a valid password");
+                            }
                         }
                         else{
-                            password.setError("Enter a valid password");
+                            if (pswrd.equals(member.getPassword())){
+//                            flag = 1;
+                                opendashboard();
+                            }
+                            else{
+                                password.setError("Enter a valid password");
+                            }
                         }
-                    } else {
+                    }
+                    else {
                         Log.e("EXAMPLE", "failed to find document with: ", task.getError());
                         email.setError("User not found");
                     }
@@ -76,6 +96,11 @@ public class SignInActivity extends AppCompatActivity {
                 openregister();
             }
         });
+    }
+
+    private void openAdmindashboard() {
+        Intent intent = new Intent(this, AdmindashboardActivity.class);
+        startActivity(intent);
     }
 
     public void openregister(){
