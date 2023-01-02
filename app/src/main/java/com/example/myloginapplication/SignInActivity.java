@@ -15,6 +15,7 @@ import com.example.myloginapplication.Model.Member;
 
 import org.bson.Document;
 
+import java.security.MessageDigest;
 import java.util.Locale;
 
 public class SignInActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String mail = email.getText().toString().toLowerCase(Locale.ROOT);
                 String pswrd = password.getText().toString();
+                String hash = hashing(pswrd);
                 Document queryFilter  = new Document("emailId", mail);
 //                adminCollection.findOne(queryFilter).getAsync(task -> {
 //                    if(task.isSuccess()){
@@ -60,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
                             }
                         }
                         else{
-                            if (pswrd.equals(member.getPassword())){
+                            if (hash.equals(member.getPassword())){
 //                            flag = 1;
                                 opendashboard();
                             }
@@ -112,4 +114,25 @@ public class SignInActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
+    //////////////////////////
+    public static String hashing(String password) {
+        String result = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            return bytesToHex(hash); // make it printable
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+    private static String bytesToHex(byte[] hash) {
+// return DatatypeConverter.printHexBinary(hash);
+        final StringBuilder builder=new StringBuilder();
+        for(byte b:hash) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+    ///////////////////////////////
 }

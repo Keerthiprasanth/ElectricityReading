@@ -19,6 +19,7 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -99,19 +100,18 @@ public class RegisterActivity extends AppCompatActivity {
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
-//                validaterooms(registernoofrooms);
-//                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
-//                    return;
-//                }
+                validaterooms(registernoofrooms);
+                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+                    return;
+                }
                 member.setName(name);
                 memberList.add(member);
-                member.setPassword(password);
+                member.setPassword(hashing(password));
                 member.setEmailId(email);
                 member.setAddress(address);
                 member.setPropertytype(type);
                 member.setEvc(evc);
                 member.setNoofrooms(rooms);
-                opendashboard();
                 Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
                         + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
                         + member.getEmailId(), Toast.LENGTH_LONG).show();
@@ -122,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                 mongoCollection.insertOne(member).getAsync(result -> {
                     if(result.isSuccess()){
                         Log.v("Data","Data inserted");
+                        opendashboard();
                     }else{
                         Log.v("Data","Error:"+result.getError().toString());
                     }
@@ -229,5 +230,25 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return false;
     }
-
+    //////////////////////
+    public static String hashing(String password) {
+        String result = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            return bytesToHex(hash); // make it printable
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+    private static String bytesToHex(byte[] hash) {
+// return DatatypeConverter.printHexBinary(hash);
+        final StringBuilder builder=new StringBuilder();
+        for(byte b:hash) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+    //////////////////
 }
