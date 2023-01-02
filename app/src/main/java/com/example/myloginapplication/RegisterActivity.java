@@ -19,16 +19,11 @@ import com.example.myloginapplication.Model.Member;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
@@ -43,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     int rooms=1;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     MongoClient mongoClient = MainActivity.mongoClient;
-    MongoCollection mongoCollection = MainActivity.mongoCollection;
+    MongoCollection<Member> mongoCollection = MainActivity.mongoCollection;
     User user;
     TextView registernoofrooms;
 

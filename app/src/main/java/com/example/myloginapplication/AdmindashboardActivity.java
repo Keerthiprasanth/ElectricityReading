@@ -24,6 +24,7 @@ import io.realm.mongodb.mongo.MongoCollection;
 
 public class AdmindashboardActivity extends AppCompatActivity {
     double dayprize,nightprize,gasprize;
+    CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +46,8 @@ public class AdmindashboardActivity extends AppCompatActivity {
                 admin.setPriceNight(nightprize);
                 gasprize= Double.parseDouble(pricegas.getText().toString());
                 admin.setPriceGas(gasprize);
-                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
-                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+//                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Admin> mongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
                 mongoCollection.insertOne(admin).getAsync(result -> {
                     if(result.isSuccess()){

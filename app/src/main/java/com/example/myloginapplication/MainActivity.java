@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     static MongoDatabase mongoDatabase;
     static MongoClient mongoClient;
     static MongoCollection<Member> mongoCollection;
+    static CodecRegistry pojoCodecRegistry;
     User user;
     static App app;
     @Override
@@ -59,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
         user= app.currentUser();
         mongoClient = user.getMongoClient("mongodb-atlas");
         mongoDatabase = mongoClient.getDatabase("electricity");
-        CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
+        pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
                 fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
 //        mongoDatabase = mongoDatabase.withCodecRegistry(pojoCodecRegistry);
 
         Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);
-        Button dashboard = findViewById(R.id.dashboardbtn);
+//        Button dashboard = findViewById(R.id.dashboardbtn);
 
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dashboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                opendashboard();
-            }
-        });
+//        dashboard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                opendashboard();
+//            }
+//        });
     }
 
     public void openregister(){

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#E1B1B1"
+    android:background="@drawable/bg"
     tools:context=".DashboardActivity">
 
 
@@ -18,8 +18,10 @@
         android:fontFamily="serif"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="25sp"
-        android:text="Customer Dashboard" />
+        android:textSize="30sp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:text="Dashboard" />
 
     <TextView
         android:id="@+id/textdetails"
@@ -33,7 +35,7 @@
         android:fontFamily="serif"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:text="Enter the following fields to update current details"
+        android:text="Enter the details"
         android:textSize="18sp"/>
 
     <TextView
@@ -46,6 +48,7 @@
         android:background="@drawable/corner_bg"
         android:hint="Submission Date in (MM/DD/YY) format"
         android:paddingStart="10dp"
+        android:textColorHint="#40000000"
         android:textSize="15sp"
         android:inputType="date"
         android:focusable="false"
@@ -64,6 +67,7 @@
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
         android:hint="Electricity meter reading during day (kWh)"
+        android:textColorHint="#40000000"
         android:paddingStart="10dp"
         android:textSize="15sp"
         android:inputType="numberDecimal"
@@ -79,6 +83,7 @@
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
         android:hint="Electricity meter reading during night (kWh)"
+        android:textColorHint="#40000000"
         android:paddingStart="10dp"
         android:textSize="15sp"
         android:inputType="text|number"
@@ -94,6 +99,7 @@
         android:layout_marginEnd="25dp"
         android:background="@drawable/corner_bg"
         android:hint="Gas meter reading (kWh)"
+        android:textColorHint="#40000000"
         android:paddingStart="10dp"
         android:textSize="15sp"
         android:inputType="text|number"
