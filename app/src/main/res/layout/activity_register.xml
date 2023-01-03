@@ -97,6 +97,7 @@
             android:background="@drawable/corner_bg"
             android:drawableStart="@drawable/ic_baseline_password_24"
             android:drawablePadding="20dp"
+            android:paddingEnd="45dp"
             android:inputType="textPassword"
             android:textSize="15sp"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -207,9 +208,9 @@
         android:layout_centerHorizontal="true"
         android:backgroundTintMode="multiply"
         android:layout_marginTop="5dp"
-        android:popupBackground="#DAC0C0"
+        android:popupBackground="@drawable/corner_bg2"
         android:popupElevation="@dimen/cardview_compat_inset_shadow"
-        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:backgroundTint="#FAD4D4"
         android:layout_below="@+id/textpropertytype"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"

@@ -1,5 +1,7 @@
 package com.example.myloginapplication;
 
+import static com.example.myloginapplication.MainActivity.mongoCollection;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,8 @@ import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+
+import org.bson.Document;
 
 public class RegisterActivity extends AppCompatActivity {
     Member member;
@@ -100,7 +104,11 @@ public class RegisterActivity extends AppCompatActivity {
                 address = registerAddress.getText().toString();
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
-                validaterooms(registernoofrooms);
+
+//                if(checkUser(email)){
+//                    return;
+//                }
+//                validaterooms(registernoofrooms);
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
                     return;
                 }
@@ -112,9 +120,10 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setPropertytype(type);
                 member.setEvc(evc);
                 member.setNoofrooms(rooms);
-                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
-                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
-                        + member.getEmailId(), Toast.LENGTH_LONG).show();
+
+//                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
+//                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
+//                        + member.getEmailId(), Toast.LENGTH_LONG).show();
 
 //                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
@@ -146,6 +155,16 @@ public class RegisterActivity extends AppCompatActivity {
                 opensignin();
             }
         });
+    }
+
+    private boolean checkUser(String email) {
+        Document queryFilter  = new Document("emailId", email);
+        mongoCollection.findOne(queryFilter).getAsync(task -> {
+            if (task.isSuccess()) {
+                Toast.makeText(RegisterActivity.this,"User already exists",Toast.LENGTH_LONG).show();
+            }
+        });
+        return true;
     }
 
     private void qrscanner() {
@@ -184,7 +203,9 @@ public class RegisterActivity extends AppCompatActivity {
             registerMail.setError("Please enter a valid Email ID");
         }
         if (!passwordValidation(password)) {
-            registerPassword.setError("Please create valid password (Eg: Abcd@123");
+            registerPassword.setError("Your password length should be 8 and contain " +
+                    "\n1) Uppercase Letter"+"\n2) Lowercase Letter"+"\n3) Number"+"\n4) Symbol"+
+                    "\n(Eg: Abcd@123)");
         }
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");

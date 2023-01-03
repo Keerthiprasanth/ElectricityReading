@@ -4,8 +4,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +14,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myloginapplication.Model.Member;
 import com.example.myloginapplication.Model.Readings;
 
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -37,6 +33,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     static final List<Readings> readingList = new ArrayList<>();
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     private DatePickerDialog datePickerDialog;
+    Readings readings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +57,20 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         submitbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Readings readings = new Readings();
+                readings = new Readings();
                 readings.setDate(datebtn.getText().toString());
-                dayreading = Double.parseDouble(textday.getText().toString());
-                readings.setElecDay(dayreading);
-                nightreading = Double.parseDouble(textnight.getText().toString());
-                readings.setElecNight(nightreading);
-                gasreading = Double.parseDouble(textgas.getText().toString());
-                readings.setGas(gasreading);
-                readingList.add(readings);
-                validatefields();
+//                readings.setElecDay(validateday(textday));
+//                nightreading = Double.parseDouble(textnight.getText().toString());
+//                readings.setElecNight(nightreading);
+//                gasreading = Double.parseDouble(textgas.getText().toString());
+//                readings.setGas(gasreading);
+//                readingList.add(readings);
+                if(!validateday(textday) && !validatenight(textnight) && !validategas(textgas)){
+                    return;
+                }
+//                if (!validatefields(textday, textnight, textgas, datebtn)) {
+//                    return;
+//                }
                 CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
                         fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Readings> mongoCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
@@ -87,9 +88,54 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         });
     }
 
-    private void validatefields() {
-//        ////////////////////////////////
+    private boolean validateday(TextView textday) {
+        try {
+            dayreading = Double.parseDouble(textday.getText().toString());
+            readings.setElecDay(dayreading);
+            return true;
+        }catch (NumberFormatException ex){
+            textday.setError("Required");
+        }
+        return false;
     }
+    private boolean validatenight(TextView textnight) {
+        try {
+            nightreading = Double.parseDouble(textnight.getText().toString());
+            readings.setElecDay(nightreading);
+            return true;
+        }catch (NumberFormatException ex){
+            textnight.setError("Required");
+        }
+        return false;
+    }
+    private boolean validategas(TextView textgas) {
+        try {
+            gasreading = Double.parseDouble(textgas.getText().toString());
+            readings.setGas(gasreading);
+            return true;
+        }catch (NumberFormatException ex){
+            textgas.setError("Required");
+        }
+        return false;
+    }
+
+//    private boolean validatefields(TextView textday, TextView textnight, TextView textgas, TextView datebtn) {
+//            try {
+//                if (Double.parseDouble(textday.getText().toString()) < 1) {
+//                    dayreading = Double.parseDouble(textday.getText().toString());
+//                    readings.setElecDay(dayreading);
+//                    return true;
+//                }
+//            }catch (NumberFormatException ex){
+////            Log.v("Result","Not a number");
+//                registernoofrooms.setText("1");
+//                rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//                registernoofrooms.setError("Rooms should not be less than 1");
+//            }
+//        return false;
+//    }
+
+
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {

@@ -36,7 +36,6 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String mail = email.getText().toString().toLowerCase(Locale.ROOT);
                 String pswrd = password.getText().toString();
-                String hash = hashing(pswrd);
                 Document queryFilter  = new Document("emailId", mail);
 //                adminCollection.findOne(queryFilter).getAsync(task -> {
 //                    if(task.isSuccess()){
@@ -48,12 +47,13 @@ public class SignInActivity extends AppCompatActivity {
 //                        Log.v("Error",task.getError().toString());
 //                    }
 //                });
+                String hash = hashing(pswrd);
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
                         Member member = (Member) task.get();
                         Log.v("EXAMPLE", "successfully found a document: " + member + member.getPassword()+member.getName());
                         if(member.isAdmin()){
-                            if (pswrd.equals(member.getPassword())){
+                            if (hash.equals(member.getPassword())){
 //                            flag = 1;
                                 openAdmindashboard();
                             }

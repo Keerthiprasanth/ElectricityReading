@@ -76,19 +76,19 @@
         android:textColor="@color/white" />
 
 
-<!--    <Button-->
-<!--        android:id="@+id/dashboardbtn"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_marginStart="50dp"-->
-<!--        android:layout_marginEnd="50dp"-->
-<!--        android:layout_marginBottom="25dp"-->
-<!--        android:backgroundTint="@color/black"-->
-<!--        android:paddingLeft="25dp"-->
-<!--        android:paddingTop="10dp"-->
-<!--        android:paddingRight="25dp"-->
-<!--        android:paddingBottom="10dp"-->
-<!--        android:text="Dashboard" />-->
+    <Button
+        android:id="@+id/dashboardbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/black"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="10dp"
+        android:text="Dashboard" />
 </RelativeLayout>

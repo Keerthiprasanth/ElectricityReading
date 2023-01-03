@@ -25,6 +25,7 @@ import io.realm.mongodb.mongo.MongoCollection;
 public class AdmindashboardActivity extends AppCompatActivity {
     double dayprize,nightprize,gasprize;
     CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
+    Admin admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +40,10 @@ public class AdmindashboardActivity extends AppCompatActivity {
         adminsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Admin admin = new Admin();
-                dayprize= Double.parseDouble(priceday.getText().toString());
-                admin.setPriceDay(dayprize);
-                nightprize= Double.parseDouble(pricenight.getText().toString());
-                admin.setPriceNight(nightprize);
-                gasprize= Double.parseDouble(pricegas.getText().toString());
-                admin.setPriceGas(gasprize);
+                admin = new Admin();
+                if(!validateday(priceday) && !validatenight(pricenight) && !validategas(pricegas)){
+                    return;
+                }
 //                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Admin> mongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
@@ -59,5 +57,35 @@ public class AdmindashboardActivity extends AppCompatActivity {
                 Toast.makeText( AdmindashboardActivity.this, "Prize submitted", Toast.LENGTH_LONG).show();
             }
         });
+    }
+    private boolean validateday(TextView priceday) {
+        try {
+            dayprize = Double.parseDouble(priceday.getText().toString());
+            admin.setPriceDay(dayprize);
+            return true;
+        }catch (NumberFormatException ex){
+            priceday.setError("Required");
+        }
+        return false;
+    }
+    private boolean validatenight(TextView pricenight) {
+        try {
+            nightprize = Double.parseDouble(pricenight.getText().toString());
+            admin.setPriceNight(nightprize);
+            return true;
+        }catch (NumberFormatException ex){
+            pricenight.setError("Required");
+        }
+        return false;
+    }
+    private boolean validategas(TextView pricegas) {
+        try {
+            gasprize = Double.parseDouble(pricegas.getText().toString());
+            admin.setPriceGas(gasprize);
+            return true;
+        }catch (NumberFormatException ex){
+            pricegas.setError("Required");
+        }
+        return false;
     }
 }

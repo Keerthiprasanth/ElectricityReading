@@ -94,7 +94,7 @@
         android:fontFamily="serif"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:text="Don't have an account? Sign up"
+        android:text="Don't have an account? Click here to sign up"
         android:textSize="12sp"/>
 
 </RelativeLayout>
