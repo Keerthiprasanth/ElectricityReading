@@ -65,10 +65,10 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
 //                gasreading = Double.parseDouble(textgas.getText().toString());
 //                readings.setGas(gasreading);
 //                readingList.add(readings);
-                if(!validateday(textday) && !validatenight(textnight) && !validategas(textgas)){
+                if(!validatefields(textday,textnight,textgas)){
                     return;
                 }
-//                if (!validatefields(textday, textnight, textgas, datebtn)) {
+//                if(!validateday(textday) && !validatenight(textnight) && !validategas(textgas)){
 //                    return;
 //                }
                 CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
@@ -81,9 +81,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                         Log.v("Data","Error:"+result.getError().toString());
                     }
                 });
-                Toast.makeText( DashboardActivity.this, "Reading values are "+String.valueOf(dayreading)
-                        +String.valueOf(nightreading)+String.valueOf(gasreading), Toast.LENGTH_LONG).show();
-//                Toast.makeText( DashboardActivity.this, "Not set submit button yet", Toast.LENGTH_LONG).show();
+                Toast.makeText( DashboardActivity.this, "Readings submitted", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -101,7 +99,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     private boolean validatenight(TextView textnight) {
         try {
             nightreading = Double.parseDouble(textnight.getText().toString());
-            readings.setElecDay(nightreading);
+            readings.setElecNight(nightreading);
             return true;
         }catch (NumberFormatException ex){
             textnight.setError("Required");
@@ -119,23 +117,20 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         return false;
     }
 
-//    private boolean validatefields(TextView textday, TextView textnight, TextView textgas, TextView datebtn) {
-//            try {
-//                if (Double.parseDouble(textday.getText().toString()) < 1) {
-//                    dayreading = Double.parseDouble(textday.getText().toString());
-//                    readings.setElecDay(dayreading);
-//                    return true;
-//                }
-//            }catch (NumberFormatException ex){
-////            Log.v("Result","Not a number");
-//                registernoofrooms.setText("1");
-//                rooms = Integer.parseInt(registernoofrooms.getText().toString());
-//                registernoofrooms.setError("Rooms should not be less than 1");
-//            }
-//        return false;
-//    }
-
-
+    private boolean validatefields(TextView textday, TextView textnight, TextView textgas) {
+        try {
+            dayreading = Double.parseDouble(textday.getText().toString());
+            readings.setElecDay(dayreading);
+            nightreading = Double.parseDouble(textnight.getText().toString());
+            readings.setElecNight(nightreading);
+            gasreading = Double.parseDouble(textgas.getText().toString());
+            readings.setGas(gasreading);
+            return true;
+        }catch (NumberFormatException ex){
+            Toast.makeText(DashboardActivity.this,"All the fields are required",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -143,9 +138,11 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DATE, day);
-        String today = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+        Toast.makeText(DashboardActivity.this,"Date - "+day+(month+1)+year,Toast.LENGTH_LONG).show();
+        String datefinal = String.valueOf(day)+" "+String.valueOf(month+1)+" "+String.valueOf(year);
+//        String datefinal = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
         TextView datebtn = findViewById(R.id.datebtn);
-        datebtn.setText(today);
+        datebtn.setText(datefinal);
 //        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
     }
 }

@@ -2,6 +2,7 @@ package com.example.myloginapplication.Model;
 
 public class Admin {
     private double priceDay,priceNight,priceGas;
+    private String date;
 
     public double getPriceDay() {
         return priceDay;
@@ -25,5 +26,13 @@ public class Admin {
 
     public void setPriceGas(double priceGas) {
         this.priceGas = priceGas;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

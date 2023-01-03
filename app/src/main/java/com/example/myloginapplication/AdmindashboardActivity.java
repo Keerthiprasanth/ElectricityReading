@@ -4,10 +4,12 @@ import static com.example.myloginapplication.MainActivity.mongoDatabase;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +21,13 @@ import com.example.myloginapplication.Model.Readings;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.mongo.MongoCollection;
 
-public class AdmindashboardActivity extends AppCompatActivity {
+public class AdmindashboardActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     double dayprize,nightprize,gasprize;
     CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
     Admin admin;
@@ -32,18 +37,40 @@ public class AdmindashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admindashboard);
 
+        TextView datebtn = findViewById(R.id.datebtn);
         TextView priceday = findViewById(R.id.prizeday);
         TextView pricenight = findViewById(R.id.prizenight);
         TextView pricegas = findViewById(R.id.prizegas);
         Button adminsubmit = findViewById(R.id.adminsubmit);
 
+        datebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                androidx.fragment.app.DialogFragment submission = new DatePickerFragment();
+                submission.show(getSupportFragmentManager(), "Date");
+            }
+        });
+
         adminsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 admin = new Admin();
-                if(!validateday(priceday) && !validatenight(pricenight) && !validategas(pricegas)){
+                admin.setDate(datebtn.getText().toString());
+                if(!validatefields(priceday,pricenight,pricegas)){
                     return;
                 }
+//                if(!validateday(priceday)){
+//                    return;
+//                }
+//                if(!validatenight(pricenight)){
+//                    return;
+//                }
+//                if(!validategas(pricegas)){
+//                    return;
+//                }
+//                if(!validateday(priceday) && !validatenight(pricenight) && !validategas(pricegas)){
+//                    return;
+//                }
 //                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Admin> mongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
@@ -87,5 +114,32 @@ public class AdmindashboardActivity extends AppCompatActivity {
             pricegas.setError("Required");
         }
         return false;
+    }
+    private boolean validatefields(TextView priceday, TextView pricenight, TextView pricegas) {
+        try {
+            dayprize = Double.parseDouble(priceday.getText().toString());
+            admin.setPriceDay(dayprize);
+            nightprize = Double.parseDouble(pricenight.getText().toString());
+            admin.setPriceNight(nightprize);
+            gasprize = Double.parseDouble(pricegas.getText().toString());
+            admin.setPriceGas(gasprize);
+            return true;
+        }catch (NumberFormatException ex){
+            Toast.makeText(AdmindashboardActivity.this,"All the fields are required",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, day);
+        Toast.makeText(AdmindashboardActivity.this,"Date - "+day+(month+1)+year,Toast.LENGTH_LONG).show();
+        String datefinal = String.valueOf(day)+" "+String.valueOf(month+1)+" "+String.valueOf(year);
+//        String datefinal = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
+        TextView datebtn = findViewById(R.id.datebtn);
+        datebtn.setText(datefinal);
+//        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
     }
 }
