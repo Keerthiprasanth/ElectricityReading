@@ -51,29 +51,25 @@ public class SignInActivity extends AppCompatActivity {
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
                         Member member = (Member) task.get();
-                        Log.v("EXAMPLE", "successfully found a document: " + member + member.getPassword()+member.getName());
-                        if(member.isAdmin()){
-                            if (hash.equals(member.getPassword())){
+                        if(member != null) {
+                            if (member.isAdmin()) {
+                                if (hash.equals(member.getPassword())) {
 //                            flag = 1;
-                                openAdmindashboard();
-                            }
-                            else{
-                                password.setError("Enter a valid password");
-                            }
-                        }
-                        else{
-                            if (hash.equals(member.getPassword())){
+                                    openAdmindashboard();
+                                } else {
+                                    password.setError("Enter a valid password");
+                                }
+                            } else {
+                                if (hash.equals(member.getPassword())) {
 //                            flag = 1;
-                                opendashboard();
+                                    opendashboard();
+                                } else {
+                                    password.setError("Enter a valid password");
+                                }
                             }
-                            else{
-                                password.setError("Enter a valid password");
-                            }
+                        }else{
+                            email.setError("User not found");
                         }
-                    }
-                    else {
-                        Log.e("EXAMPLE", "failed to find document with: ", task.getError());
-                        email.setError("User not found");
                     }
                 });
 //                Member member1 = new Member();

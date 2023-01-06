@@ -1,6 +1,6 @@
 package com.example.myloginapplication;
 
-import static com.example.myloginapplication.MainActivity.mongoCollection;
+import static com.example.myloginapplication.MainActivity.pojoCodecRegistry;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +40,8 @@ public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
-    int rooms=1;
+    int rooms;
+    int flag;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     MongoClient mongoClient = MainActivity.mongoClient;
     MongoCollection<Member> mongoCollection = MainActivity.mongoCollection;
@@ -95,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Member member = new Member();
+                member = new Member();
                 List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
@@ -105,13 +106,13 @@ public class RegisterActivity extends AppCompatActivity {
 //                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
 
-//                if(checkUser(email)){
-//                    return;
-//                }
 //                validaterooms(registernoofrooms);
-                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms)) {
+                if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms, registerevc)) {
                     return;
                 }
+
+                checkUser();
+
                 member.setName(name);
                 memberList.add(member);
                 member.setPassword(hashing(password));
@@ -119,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setAddress(address);
                 member.setPropertytype(type);
                 member.setEvc(evc);
-                member.setNoofrooms(rooms);
+//                member.setNoofrooms(rooms);
 
 //                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
 //                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
@@ -128,15 +129,19 @@ public class RegisterActivity extends AppCompatActivity {
 //                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 //                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
-                mongoCollection.insertOne(member).getAsync(result -> {
-                    if(result.isSuccess()){
-                        Log.v("Data","Data inserted");
-                        opendashboard();
-                    }else{
-                        Log.v("Data","Error:"+result.getError().toString());
-                    }
-                });
+//                if(flag == 0) {
+                    mongoCollection.insertOne(member).getAsync(result -> {
+                        if (result.isSuccess()) {
+                            Log.v("Data", "Data inserted");
+                            Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_LONG).show();
+                            opendashboard();
+                        } else {
+                            Log.v("Data", "Error:" + result.getError().toString());
+                        }
+                    });
+//                }
                 Log.v("BTN","Passed collection");
+
 //                Document queryFilter  = new Document("emailId", "steve@gmail.com");
 //                mongoCollection.findOne(queryFilter).getAsync(task -> {
 //                    if (task.isSuccess()) {
@@ -157,14 +162,33 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private boolean checkUser(String email) {
-        Document queryFilter  = new Document("emailId", email);
-        mongoCollection.findOne(queryFilter).getAsync(task -> {
+    private void validateEvc(TextView registerEvc) {
+        MongoCollection<Document> Collection = mongoDatabase.getCollection("voucher").withCodecRegistry(pojoCodecRegistry);
+        Document queryFilter  = new Document("evc", this.evc);
+        Collection.findOne(queryFilter).getAsync(task -> {
             if (task.isSuccess()) {
-                Toast.makeText(RegisterActivity.this,"User already exists",Toast.LENGTH_LONG).show();
+                member.setEvc(evc);
+            }else{
+                registerEvc.setError("Voucher is invalid");
             }
         });
-        return true;
+    }
+
+    private void checkUser() {
+        Document queryFilter  = new Document("emailId", this.email);
+        mongoCollection.findOne(queryFilter).getAsync(task -> {
+            if (task.isSuccess()) {
+                Member member = (Member) task.get();
+                if(member != null) {
+                    Log.v("User", "User Exists");
+                    Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
+                    opensignin();
+                }
+                else{
+                    Log.v("User","User does not exist");
+                }
+            }
+        });
     }
 
     private void qrscanner() {
@@ -195,7 +219,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     });
 
-    private boolean validatefields(TextView registerName, TextView registerAddress, TextView registerPassword, TextView registerMail, TextView registernoofrooms) {
+    private boolean validatefields(TextView registerName, TextView registerAddress, TextView registerPassword, TextView registerMail, TextView registernoofrooms, TextView registerevc) {
         if (name.isEmpty()) {
             registerName.setError("Please enter your name");
         }
@@ -210,8 +234,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
+        validateEvc(registerevc);
         validaterooms(registernoofrooms);
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !validaterooms(registernoofrooms);
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty()
+                && !validaterooms(registernoofrooms);
     }
 
 
@@ -246,8 +272,9 @@ public class RegisterActivity extends AppCompatActivity {
         }catch (NumberFormatException ex){
 //            Log.v("Result","Not a number");
             registernoofrooms.setText("1");
-            rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//            rooms = Integer.parseInt(registernoofrooms.getText().toString());
             registernoofrooms.setError("Rooms should not be less than 1");
+            validaterooms(registernoofrooms);
         }
         return false;
     }
