@@ -110,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms, registerevc)) {
                     return;
                 }
-
-                checkUser();
+//                validaterooms(registernoofrooms);
+//                checkUser();
 
                 member.setName(name);
                 memberList.add(member);
@@ -120,7 +120,23 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setAddress(address);
                 member.setPropertytype(type);
                 member.setEvc(evc);
+//                member.setNoofrooms(validaterooms(registernoofrooms));
+
+                try {
+//            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
+//                Log.v("Result","It is a number");
+                    rooms = Integer.parseInt(registernoofrooms.getText().toString());
 //                member.setNoofrooms(rooms);
+//            }
+                }catch (NumberFormatException ex){
+//            Log.v("Result","Not a number");
+                    registernoofrooms.setText("1");
+                    rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//            member.setNoofrooms(rooms);
+                    registernoofrooms.setError("Rooms should not be less than 1");
+//            validaterooms(registernoofrooms);
+                }
+                member.setNoofrooms(rooms);
 
 //                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
 //                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
@@ -130,15 +146,45 @@ public class RegisterActivity extends AppCompatActivity {
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 //                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
 //                if(flag == 0) {
-                    mongoCollection.insertOne(member).getAsync(result -> {
-                        if (result.isSuccess()) {
-                            Log.v("Data", "Data inserted");
-                            Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_LONG).show();
-                            opendashboard();
-                        } else {
-                            Log.v("Data", "Error:" + result.getError().toString());
+                try {
+                    Document queryFilter = new Document("emailId", email);
+                    mongoCollection.findOne(queryFilter).getAsync(task -> {
+                        if (task.isSuccess()) {
+//                        Member mem = task.get();
+                Member mem = (Member) task.get();
+                        if(mem != null) {
+//                            userEmail = task.get().getEmailId();
+//                    userEmail = mem.getEmailId();
+                            if (email.equals(task.get().getEmailId())) {
+                                Log.v("User", "User Exists");
+                                Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
+//                    opensignin();
+                            }
+                        }else {
+                                mongoCollection.insertOne(member).getAsync(result -> {
+                                    if (result.isSuccess()) {
+                                        Log.v("Data", "Data inserted");
+                                        Toast.makeText(RegisterActivity.this, "Welcome", Toast.LENGTH_LONG).show();
+                                        opendashboard();
+                                    } else {
+                                        Log.v("Data", "Error:" + result.getError().toString());
+                                    }
+                                });
+                            }
                         }
                     });
+                }catch (NullPointerException ignored){
+                    Log.v("Exception","Null Pointer Exception");
+                }
+//                    mongoCollection.insertOne(member).getAsync(result -> {
+//                        if (result.isSuccess()) {
+//                            Log.v("Data", "Data inserted");
+//                            Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_LONG).show();
+//                            opendashboard();
+//                        } else {
+//                            Log.v("Data", "Error:" + result.getError().toString());
+//                        }
+//                    });
 //                }
                 Log.v("BTN","Passed collection");
 
@@ -234,10 +280,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        validateEvc(registerevc);
-        validaterooms(registernoofrooms);
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty()
-                && !validaterooms(registernoofrooms);
+//        validateEvc(registerevc);
+//        validaterooms(registernoofrooms);
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty();
     }
 
 
@@ -261,22 +306,22 @@ public class RegisterActivity extends AppCompatActivity {
         return Pattern.matches(passwordRegex, password);
     }
 
-    public boolean validaterooms(TextView registernoofrooms){
+    public int validaterooms(TextView registernoofrooms){
         try {
-            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
+//            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
 //                Log.v("Result","It is a number");
                 rooms = Integer.parseInt(registernoofrooms.getText().toString());
-                member.setNoofrooms(rooms);
-                return true;
-            }
+//                member.setNoofrooms(rooms);
+//            }
         }catch (NumberFormatException ex){
 //            Log.v("Result","Not a number");
             registernoofrooms.setText("1");
-//            rooms = Integer.parseInt(registernoofrooms.getText().toString());
+            rooms = Integer.parseInt(registernoofrooms.getText().toString());
+//            member.setNoofrooms(rooms);
             registernoofrooms.setError("Rooms should not be less than 1");
-            validaterooms(registernoofrooms);
+//            validaterooms(registernoofrooms);
         }
-        return false;
+        return rooms;
     }
     //////////////////////
     public static String hashing(String password) {

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         user= app.currentUser();
+        assert user != null;
         mongoClient = user.getMongoClient("mongodb-atlas");
         mongoDatabase = mongoClient.getDatabase("electricity");
         pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
