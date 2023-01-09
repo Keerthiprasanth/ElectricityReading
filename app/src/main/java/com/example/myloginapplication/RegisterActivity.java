@@ -40,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     Member member;
     static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
+    String userEmail;
     int rooms;
     int flag;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
@@ -111,17 +112,15 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                checkUser();
-
                 member.setName(name);
                 memberList.add(member);
                 member.setPassword(hashing(password));
                 member.setEmailId(email);
                 member.setAddress(address);
                 member.setPropertytype(type);
-                member.setEvc(evc);
+//                member.setEvc(evc);
 //                member.setNoofrooms(rooms);
-
+                Log.v("BTN","Passed validation");
 //                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
 //                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
 //                        + member.getEmailId(), Toast.LENGTH_LONG).show();
@@ -129,17 +128,37 @@ public class RegisterActivity extends AppCompatActivity {
 //                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
 //                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 //                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
-//                if(flag == 0) {
-                    mongoCollection.insertOne(member).getAsync(result -> {
-                        if (result.isSuccess()) {
-                            Log.v("Data", "Data inserted");
-                            Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_LONG).show();
-                            opendashboard();
-                        } else {
-                            Log.v("Data", "Error:" + result.getError().toString());
+//                try {
+                    Document queryFilter = new Document("emailId", email);
+                    mongoCollection.findOne(queryFilter).getAsync(task -> {
+                        if (task.isSuccess()) {
+//                        Member mem = task.get();
+//                Member mem = (Member) task.get();
+//                        if(task.get().getEmailId() != null) {
+//                            userEmail = task.get().getEmailId();
+//                    userEmail = mem.getEmailId();
+                            if (email.equals(task.get().getEmailId())) {
+                                Log.v("User", "User Exists");
+                                Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
+//                    opensignin();
+                            } else {
+                                mongoCollection.insertOne(member).getAsync(result -> {
+                                    if (result.isSuccess()) {
+                                        Log.v("Data", "Data inserted");
+                                        Toast.makeText(RegisterActivity.this, "Welcome", Toast.LENGTH_LONG).show();
+                                        opendashboard();
+                                    } else {
+                                        Log.v("Data", "Error:" + result.getError().toString());
+                                    }
+                                });
+                            }
                         }
+//                    }
                     });
+//                }catch (NullPointerException ignored){
+//                    Log.v("Exception","Null Pointer Exception");
 //                }
+
                 Log.v("BTN","Passed collection");
 
 //                Document queryFilter  = new Document("emailId", "steve@gmail.com");
@@ -167,28 +186,37 @@ public class RegisterActivity extends AppCompatActivity {
         Document queryFilter  = new Document("evc", this.evc);
         Collection.findOne(queryFilter).getAsync(task -> {
             if (task.isSuccess()) {
-                member.setEvc(evc);
+                if(evc != null && !evc.equals("")) {
+//                    String voucher = task.get().toString();
+                    if (evc.equals(task.get().toString())) {
+                        member.setEvc(evc);
+                        Log.v("Voucher","Voucher added successfully");
+                    }
+                }
             }else{
                 registerEvc.setError("Voucher is invalid");
             }
         });
     }
 
-    private void checkUser() {
+    private boolean checkUser() {
         Document queryFilter  = new Document("emailId", this.email);
         mongoCollection.findOne(queryFilter).getAsync(task -> {
             if (task.isSuccess()) {
-                Member member = (Member) task.get();
-                if(member != null) {
-                    Log.v("User", "User Exists");
-                    Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
-                    opensignin();
-                }
-                else{
-                    Log.v("User","User does not exist");
+                Member mem = task.get();
+                userEmail = task.get().getEmailId();
+//                Member mem = (Member) task.get();
+                if(mem != null) {
+//                    userEmail = mem.getEmailId();
+                    if (email.equals(userEmail)) {
+                        Log.v("User", "User Exists");
+                        Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
+//                    opensignin();
+                    }
                 }
             }
         });
+        return !email.equals(userEmail);
     }
 
     private void qrscanner() {
@@ -234,10 +262,11 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        validateEvc(registerevc);
+//        validateEvc(registerevc);
+        Log.v("Validation","Entered validation");
         validaterooms(registernoofrooms);
         return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty()
-                && !validaterooms(registernoofrooms);
+                ;
     }
 
 
@@ -263,7 +292,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public boolean validaterooms(TextView registernoofrooms){
         try {
-            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
+            if (Integer.parseInt(registernoofrooms.getText().toString()) > 0) {
 //                Log.v("Result","It is a number");
                 rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 member.setNoofrooms(rooms);
@@ -274,9 +303,10 @@ public class RegisterActivity extends AppCompatActivity {
             registernoofrooms.setText("1");
 //            rooms = Integer.parseInt(registernoofrooms.getText().toString());
             registernoofrooms.setError("Rooms should not be less than 1");
-            validaterooms(registernoofrooms);
+//            member.setNoofrooms(rooms);
+            return false;
         }
-        return false;
+        return true;
     }
     //////////////////////
     public static String hashing(String password) {
