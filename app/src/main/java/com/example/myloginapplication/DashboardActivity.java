@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myloginapplication.Model.Member;
 import com.example.myloginapplication.Model.Readings;
 
 import org.bson.codecs.configuration.CodecRegistry;
@@ -34,6 +35,9 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     private DatePickerDialog datePickerDialog;
     Readings readings;
+    Member member = RegisterActivity.loggedMember;
+    Member mem = SignInActivity.loggedMember;
+    Member loggedMember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,12 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         TextView textnight = findViewById(R.id.textnight);
         TextView textgas = findViewById(R.id.textgas);
         Button submitbtn = findViewById(R.id.customersubmit);
+
+        if(member == null){
+            loggedMember = mem;
+        }else{
+            loggedMember = member;
+        }
 
         datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,14 +68,14 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             @Override
             public void onClick(View view) {
                 readings = new Readings();
-                readings.setDate(datebtn.getText().toString());
+//                readings.setDate(datebtn.getText().toString());
 //                readings.setElecDay(validateday(textday));
 //                nightreading = Double.parseDouble(textnight.getText().toString());
 //                readings.setElecNight(nightreading);
 //                gasreading = Double.parseDouble(textgas.getText().toString());
 //                readings.setGas(gasreading);
 //                readingList.add(readings);
-                if(!validatefields(textday,textnight,textgas)){
+                if(!validatefields(datebtn,textday,textnight,textgas)){
                     return;
                 }
 //                if(!validateday(textday) && !validatenight(textnight) && !validategas(textgas)){
@@ -117,15 +127,19 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         return false;
     }
 
-    private boolean validatefields(TextView textday, TextView textnight, TextView textgas) {
+    private boolean validatefields(TextView datebtn,TextView textday, TextView textnight, TextView textgas) {
         try {
-            dayreading = Double.parseDouble(textday.getText().toString());
-            readings.setElecDay(dayreading);
-            nightreading = Double.parseDouble(textnight.getText().toString());
-            readings.setElecNight(nightreading);
-            gasreading = Double.parseDouble(textgas.getText().toString());
-            readings.setGas(gasreading);
-            return true;
+            if(loggedMember != null) {
+                readings.setUserEmail(loggedMember.getEmailId());
+                readings.setDate(datebtn.getText().toString());
+                dayreading = Double.parseDouble(textday.getText().toString());
+                readings.setElecDay(dayreading);
+                nightreading = Double.parseDouble(textnight.getText().toString());
+                readings.setElecNight(nightreading);
+                gasreading = Double.parseDouble(textgas.getText().toString());
+                readings.setGas(gasreading);
+                return true;
+            }
         }catch (NumberFormatException ex){
             Toast.makeText(DashboardActivity.this,"All the fields are required",Toast.LENGTH_LONG).show();
         }

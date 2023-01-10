@@ -20,6 +20,7 @@ import java.util.Locale;
 
 public class SignInActivity extends AppCompatActivity {
     int flag=0;
+    static Member loggedMember;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,18 +51,20 @@ public class SignInActivity extends AppCompatActivity {
                 String hash = hashing(pswrd);
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
-                        Member member = (Member) task.get();
-                        if(member != null) {
-                            if (member.isAdmin()) {
-                                if (hash.equals(member.getPassword())) {
+                        Member mem = (Member) task.get();
+                        if(mem != null) {
+                            if (mem.isAdmin()) {
+                                if (hash.equals(mem.getPassword())) {
 //                            flag = 1;
+                                    loggedMember = mem;
                                     openAdmindashboard();
                                 } else {
                                     password.setError("Enter a valid password");
                                 }
                             } else {
-                                if (hash.equals(member.getPassword())) {
+                                if (hash.equals(mem.getPassword())) {
 //                            flag = 1;
+                                    loggedMember = mem;
                                     opendashboard();
                                 } else {
                                     password.setError("Enter a valid password");

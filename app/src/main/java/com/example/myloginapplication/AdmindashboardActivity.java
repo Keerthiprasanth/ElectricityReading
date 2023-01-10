@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myloginapplication.Model.Admin;
+import com.example.myloginapplication.Model.Member;
 import com.example.myloginapplication.Model.Readings;
 
 import org.bson.codecs.configuration.CodecRegistry;
@@ -28,9 +29,10 @@ import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.mongo.MongoCollection;
 
 public class AdmindashboardActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
-    double dayprize,nightprize,gasprize;
+    double dayprize,nightprize,gasprize,standardprize;
     CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
     Admin admin;
+    Member loggedMember = SignInActivity.loggedMember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
         TextView priceday = findViewById(R.id.prizeday);
         TextView pricenight = findViewById(R.id.prizenight);
         TextView pricegas = findViewById(R.id.prizegas);
+        TextView pricestandard = findViewById(R.id.prizestandard);
         Button adminsubmit = findViewById(R.id.adminsubmit);
 
         datebtn.setOnClickListener(new View.OnClickListener() {
@@ -55,8 +58,7 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
             @Override
             public void onClick(View view) {
                 admin = new Admin();
-                admin.setDate(datebtn.getText().toString());
-                if(!validatefields(priceday,pricenight,pricegas)){
+                if(!validatefields(datebtn,priceday,pricenight,pricegas,pricestandard)){
                     return;
                 }
 //                if(!validateday(priceday)){
@@ -115,15 +117,21 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
         }
         return false;
     }
-    private boolean validatefields(TextView priceday, TextView pricenight, TextView pricegas) {
+    private boolean validatefields(TextView datebtn, TextView priceday, TextView pricenight, TextView pricegas, TextView pricestandard) {
         try {
-            dayprize = Double.parseDouble(priceday.getText().toString());
-            admin.setPriceDay(dayprize);
-            nightprize = Double.parseDouble(pricenight.getText().toString());
-            admin.setPriceNight(nightprize);
-            gasprize = Double.parseDouble(pricegas.getText().toString());
-            admin.setPriceGas(gasprize);
-            return true;
+            if (loggedMember != null) {
+                admin.setLoggedEmail(loggedMember.getEmailId());
+                admin.setDate(datebtn.getText().toString());
+                dayprize = Double.parseDouble(priceday.getText().toString());
+                admin.setPriceDay(dayprize);
+                nightprize = Double.parseDouble(pricenight.getText().toString());
+                admin.setPriceNight(nightprize);
+                gasprize = Double.parseDouble(pricegas.getText().toString());
+                admin.setPriceGas(gasprize);
+                standardprize = Double.parseDouble(pricestandard.getText().toString());
+                admin.setPrizeStandard(standardprize);
+                return true;
+            }
         }catch (NumberFormatException ex){
             Toast.makeText(AdmindashboardActivity.this,"All the fields are required",Toast.LENGTH_LONG).show();
         }

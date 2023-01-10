@@ -7,6 +7,7 @@ public class Readings {
     private double elecNight;
     private double gas;
     private String date;
+    private String userEmail;
 //    date
 //    Date date = new Date(int i,int j,int k);
 
@@ -41,5 +42,13 @@ public class Readings {
 
     public void setGas(double gas) {
         this.gas = gas;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

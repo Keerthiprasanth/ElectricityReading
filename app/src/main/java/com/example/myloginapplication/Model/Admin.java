@@ -1,8 +1,9 @@
 package com.example.myloginapplication.Model;
 
 public class Admin {
-    private double priceDay,priceNight,priceGas;
+    private double priceDay,priceNight,priceGas,prizeStandard;
     private String date;
+    private String loggedEmail;
 
     public double getPriceDay() {
         return priceDay;
@@ -28,11 +29,27 @@ public class Admin {
         this.priceGas = priceGas;
     }
 
+    public double getPrizeStandard() {
+        return prizeStandard;
+    }
+
+    public void setPrizeStandard(double prizeStandard) {
+        this.prizeStandard = prizeStandard;
+    }
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getLoggedEmail() {
+        return loggedEmail;
+    }
+
+    public void setLoggedEmail(String loggedEmail) {
+        this.loggedEmail = loggedEmail;
     }
 }

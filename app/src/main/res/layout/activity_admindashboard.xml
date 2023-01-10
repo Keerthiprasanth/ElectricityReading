@@ -37,7 +37,6 @@
         android:inputType="date"
         android:focusable="false"
         android:layout_above="@+id/prizeday"
-        android:layout_centerHorizontal="true"
         android:minHeight="50dp"
         android:padding="15dp"/>
 
@@ -45,7 +44,7 @@
         android:id="@+id/prizeday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_above="@id/prizenight"
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
@@ -61,7 +60,7 @@
         android:id="@+id/prizenight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prizeday"
+        android:layout_centerVertical="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
@@ -89,11 +88,27 @@
         android:inputType="text|number"
         android:minHeight="50dp" />
 
+    <EditText
+        android:id="@+id/prizestandard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/prizegas"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:paddingStart="10dp"
+        android:background="@drawable/corner_bg"
+        android:hint="Enter the standard prize"
+        android:textColorHint="#40000000"
+        android:textSize="15sp"
+        android:inputType="text|number"
+        android:minHeight="50dp" />
+
     <Button
         android:id="@+id/adminsubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/prizegas"
+        android:layout_below="@id/prizestandard"
         android:layout_centerInParent="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"

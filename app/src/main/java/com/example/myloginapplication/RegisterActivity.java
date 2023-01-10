@@ -42,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     String name, email, password, address, type, evc;
     int rooms;
     int flag;
+    static Member loggedMember;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     MongoClient mongoClient = MainActivity.mongoClient;
     MongoCollection<Member> mongoCollection = MainActivity.mongoCollection;
@@ -121,37 +122,43 @@ public class RegisterActivity extends AppCompatActivity {
                 member.setPropertytype(type);
                 member.setEvc(evc);
 //                member.setNoofrooms(validaterooms(registernoofrooms));
+//                validateEvc(registerevc);
 
                 try {
-//            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
-//                Log.v("Result","It is a number");
                     rooms = Integer.parseInt(registernoofrooms.getText().toString());
-//                member.setNoofrooms(rooms);
-//            }
                 }catch (NumberFormatException ex){
-//            Log.v("Result","Not a number");
                     registernoofrooms.setText("1");
                     rooms = Integer.parseInt(registernoofrooms.getText().toString());
-//            member.setNoofrooms(rooms);
                     registernoofrooms.setError("Rooms should not be less than 1");
-//            validaterooms(registernoofrooms);
                 }
                 member.setNoofrooms(rooms);
 
-//                Toast.makeText(RegisterActivity.this, "Welcome " + member.getName()
-//                        + member.getAddress() + member.getEvc() + member.getPropertytype() + member.getNoofrooms()
-//                        + member.getEmailId(), Toast.LENGTH_LONG).show();
+//                try {
+//                    MongoCollection<Document> Collection = mongoDatabase.getCollection("voucher").withCodecRegistry(pojoCodecRegistry);
+//                    Document queryEvc = new Document("evc", evc);
+//                    Collection.findOne(queryEvc).getAsync(task -> {
+//                        if (task.isSuccess()) {
+//                            if(task.get() != null){
+//                                String voucher = task.get().toString();
+//                            if (evc.equals(voucher)){
+//                                member.setEvc(evc);
+//                            }
+//                        }
+//                        }
+//                        else {
+//                            registerevc.setError("Voucher is invalid");
+//                        }
+//                    });
+//                }catch (NullPointerException ex){
+//                    Log.v("Voucher","Null Pointer Exception");
+//                    return;
+//                }
 
-//                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
-//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
-//                MongoCollection<Member> mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
-//                if(flag == 0) {
                 try {
                     Document queryFilter = new Document("emailId", email);
                     mongoCollection.findOne(queryFilter).getAsync(task -> {
                         if (task.isSuccess()) {
-//                        Member mem = task.get();
-                Member mem = (Member) task.get();
+                        Member mem = (Member) task.get();
                         if(mem != null) {
 //                            userEmail = task.get().getEmailId();
 //                    userEmail = mem.getEmailId();
@@ -163,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }else {
                                 mongoCollection.insertOne(member).getAsync(result -> {
                                     if (result.isSuccess()) {
+                                        loggedMember = member;
                                         Log.v("Data", "Data inserted");
                                         Toast.makeText(RegisterActivity.this, "Welcome", Toast.LENGTH_LONG).show();
                                         opendashboard();
@@ -176,27 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }catch (NullPointerException ignored){
                     Log.v("Exception","Null Pointer Exception");
                 }
-//                    mongoCollection.insertOne(member).getAsync(result -> {
-//                        if (result.isSuccess()) {
-//                            Log.v("Data", "Data inserted");
-//                            Toast.makeText(RegisterActivity.this,"Welcome",Toast.LENGTH_LONG).show();
-//                            opendashboard();
-//                        } else {
-//                            Log.v("Data", "Error:" + result.getError().toString());
-//                        }
-//                    });
-//                }
                 Log.v("BTN","Passed collection");
-
-//                Document queryFilter  = new Document("emailId", "steve@gmail.com");
-//                mongoCollection.findOne(queryFilter).getAsync(task -> {
-//                    if (task.isSuccess()) {
-//                        Member result = (Member) task.get();
-//                        Log.v("EXAMPLE", "successfully found a document: " + result + result.getPassword()+result.getName());
-//                    } else {
-//                        Log.e("EXAMPLE", "failed to find document with: ", task.getError());
-//                    }
-//                });
             }
         });
 
@@ -213,7 +201,10 @@ public class RegisterActivity extends AppCompatActivity {
         Document queryFilter  = new Document("evc", this.evc);
         Collection.findOne(queryFilter).getAsync(task -> {
             if (task.isSuccess()) {
-                member.setEvc(evc);
+                String voucher= String.valueOf(task.get());
+                if(this.evc.equals(voucher)) {
+                    member.setEvc(evc);
+                }
             }else{
                 registerEvc.setError("Voucher is invalid");
             }
