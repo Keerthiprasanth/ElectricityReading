@@ -3,6 +3,7 @@ package com.example.myloginapplication.Model;
 public class Member {
     private String name,emailId,password,address,evc,propertytype;
     private int noofrooms;
+    private double balance;
     private boolean admin;
 
 
@@ -53,6 +54,14 @@ public class Member {
 
     public void setEvc(String evc) {
         this.evc = evc;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public int getNoofrooms() {

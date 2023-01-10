@@ -38,16 +38,6 @@ public class SignInActivity extends AppCompatActivity {
                 String mail = email.getText().toString().toLowerCase(Locale.ROOT);
                 String pswrd = password.getText().toString();
                 Document queryFilter  = new Document("emailId", mail);
-//                adminCollection.findOne(queryFilter).getAsync(task -> {
-//                    if(task.isSuccess()){
-//                        Access access = (Access) task.get();
-//                        if(pswrd.equals(access.getPassword())){
-//                            openAdmindashboard();
-//                        }
-//                    }else{
-//                        Log.v("Error",task.getError().toString());
-//                    }
-//                });
                 String hash = hashing(pswrd);
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
