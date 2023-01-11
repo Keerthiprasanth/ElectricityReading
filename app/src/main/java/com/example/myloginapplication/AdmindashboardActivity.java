@@ -5,6 +5,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,15 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myloginapplication.Model.Admin;
 import com.example.myloginapplication.Model.Member;
-import com.example.myloginapplication.Model.Readings;
 
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
-import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.mongo.MongoCollection;
 
 public class AdmindashboardActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
@@ -45,6 +42,7 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
         TextView pricegas = findViewById(R.id.prizegas);
         TextView pricestandard = findViewById(R.id.prizestandard);
         Button adminsubmit = findViewById(R.id.adminsubmit);
+        Button viewReadings = findViewById(R.id.readingsbtn);
 
         datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +82,13 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
                     }
                 });
                 Toast.makeText( AdmindashboardActivity.this, "Prize submitted", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        viewReadings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openReadings();
             }
         });
     }
@@ -149,5 +154,10 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
         TextView datebtn = findViewById(R.id.datebtn);
         datebtn.setText(datefinal);
 //        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
+    }
+
+    public void openReadings(){
+        Intent intent = new Intent(this, ReadingsActivity.class);
+        startActivity(intent);
     }
 }
