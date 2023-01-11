@@ -29,16 +29,36 @@ public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ReadingsAdapter.ViewHolder holder, int position) {
+
+        Readings reading = new Readings();
+        reading.setDate("2 2 2");
+        readingsList.add(reading);
+        reading.setUserEmail("email");
+        reading.setElecDay(12);
+        reading.setElecNight(23);
+        reading.setGas(34);
+
+        for(int i=0;i<=20;i++){
+            readingsList.add(reading);
+        }
+
         if(readingsList != null && readingsList.size() > 0){
-            Readings model = readingsList.get(position);
-            holder.customerID.setText(model.getUserEmail());
-            holder.date.setText(model.getDate());
-            holder.dayReading.setText(String.valueOf(model.getElecDay()));
-            holder.nightReading.setText(String.valueOf(model.getElecNight()));
-            holder.gasReading.setText(String.valueOf(model.getGas()));
+            Readings readings = readingsList.get(1);
+//            Readings model = readingsList.get(position);
+            holder.customerID.setText(readings.getUserEmail());
+            holder.date.setText(readings.getDate());
+            holder.dayReading.setText(String.valueOf(readings.getElecDay()));
+            holder.nightReading.setText(String.valueOf(readings.getElecNight()));
+            holder.gasReading.setText(String.valueOf(readings.getGas()));
         }else {
+            holder.customerID.setText("Null");
+            holder.date.setText("Null");
+            holder.dayReading.setText(String.valueOf("Null"));
+            holder.nightReading.setText(String.valueOf("Null"));
+            holder.gasReading.setText(String.valueOf("Null"));
             return;
         }
 
