@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);
-        Button dashboard = findViewById(R.id.dashboardbtn);
+//        Button dashboard = findViewById(R.id.dashboardbtn);
 
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dashboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                opendashboard();
-            }
-        });
+//        dashboard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                opendashboard();
+//            }
+//        });
     }
 
     public void openregister(){

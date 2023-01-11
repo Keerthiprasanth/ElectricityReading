@@ -21,6 +21,7 @@ import java.util.Locale;
 public class SignInActivity extends AppCompatActivity {
     int flag=0;
     static Member loggedMember;
+    static Member mem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
                 String hash = hashing(pswrd);
                 mongoCollection.findOne(queryFilter).getAsync(task -> {
                     if (task.isSuccess()) {
-                        Member mem = (Member) task.get();
+                        mem = (Member) task.get();
                         if(mem != null) {
                             if (mem.isAdmin()) {
                                 if (hash.equals(mem.getPassword())) {

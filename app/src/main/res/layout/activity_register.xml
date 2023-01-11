@@ -151,6 +151,7 @@
         android:background="@drawable/corner_bg"
         android:drawableStart="@drawable/ic_baseline_credit_card_24"
         android:drawablePadding="20dp"
+        android:paddingEnd="45dp"
         android:hint="@string/energy_voucher_code_evc"
         android:textColorHint="#40000000"
         android:paddingStart="10dp"

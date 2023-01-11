@@ -38,8 +38,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import org.bson.Document;
 
 public class RegisterActivity extends AppCompatActivity {
-    Member member;
-    static final List<Member> memberList = new ArrayList<>();
+    static Member member;
+//    static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
     int flag;
@@ -100,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 member = new Member();
-                List<Member> memberList = new ArrayList<>();
+//                List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
                 email = registerMail.getText().toString().toLowerCase(Locale.ROOT);
@@ -117,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                checkUser();
 
                 member.setName(name);
-                memberList.add(member);
+//                memberList.add(member);
                 member.setPassword(hashing(password));
                 member.setEmailId(email);
                 member.setAddress(address);

@@ -4,6 +4,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     private DatePickerDialog datePickerDialog;
     Readings readings;
+    String emailID = SignInActivity.mem.getEmailId();
     Member member = RegisterActivity.loggedMember;
     Member mem = SignInActivity.loggedMember;
     Member loggedMember;
@@ -49,6 +51,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         TextView textnight = findViewById(R.id.textnight);
         TextView textgas = findViewById(R.id.textgas);
         Button submitbtn = findViewById(R.id.customersubmit);
+        Button paymentbtn = findViewById(R.id.paymentpage);
 
         if(member == null){
             loggedMember = mem;
@@ -94,6 +97,13 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                 Toast.makeText( DashboardActivity.this, "Readings submitted", Toast.LENGTH_LONG).show();
             }
         });
+
+        paymentbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPayment();
+            }
+        });
     }
 
     private boolean validateday(TextView textday) {
@@ -130,7 +140,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     private boolean validatefields(TextView datebtn,TextView textday, TextView textnight, TextView textgas) {
         try {
             if(loggedMember != null) {
-                readings.setUserEmail(loggedMember.getEmailId());
+                readings.setUserEmail(emailID);
                 readings.setDate(datebtn.getText().toString());
                 dayreading = Double.parseDouble(textday.getText().toString());
                 readings.setElecDay(dayreading);
@@ -158,5 +168,10 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         TextView datebtn = findViewById(R.id.datebtn);
         datebtn.setText(datefinal);
 //        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
+    }
+
+    public void openPayment(){
+        Intent intent = new Intent(this, PaymentActivity.class);
+        startActivity(intent);
     }
 }
