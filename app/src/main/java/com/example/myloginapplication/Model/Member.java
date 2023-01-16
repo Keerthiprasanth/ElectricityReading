@@ -1,5 +1,7 @@
 package com.example.myloginapplication.Model;
 
+import org.bson.conversions.Bson;
+
 public class Member {
     private String name,emailId,password,address,evc,propertytype;
     private int noofrooms;
@@ -68,8 +70,9 @@ public class Member {
         return bill;
     }
 
-    public void setBill(double bill) {
+    public Bson setBill(double bill) {
         this.bill = bill;
+        return null;
     }
 
     public int getNoofrooms() {

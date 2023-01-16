@@ -36,6 +36,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
 
 public class RegisterActivity extends AppCompatActivity {
     static Member member;
@@ -47,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     MongoClient mongoClient = MainActivity.mongoClient;
     MongoCollection<Member> mongoCollection = MainActivity.mongoCollection;
+    CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
     User user;
     Double balance;
     TextView registernoofrooms;
@@ -196,8 +198,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                 if (result.isSuccess()) {
                                                     loggedMember = member;
                                                     Log.v("Data", "Data inserted");
-                                                    Toast.makeText(RegisterActivity.this, "Welcome", Toast.LENGTH_LONG).show();
-                                                    opendashboard();
+                                                    Toast.makeText(RegisterActivity.this, "Registered Successfully! Try signing in", Toast.LENGTH_LONG).show();
+                                                    opensignin();
                                                 } else {
                                                     Log.v("Data", "Error:" + result.getError().toString());
                                                 }

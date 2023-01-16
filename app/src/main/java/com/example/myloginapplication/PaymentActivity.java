@@ -1,5 +1,6 @@
 package com.example.myloginapplication;
 
+import static com.example.myloginapplication.MainActivity.mongoCollection;
 import static com.example.myloginapplication.MainActivity.mongoDatabase;
 import static com.example.myloginapplication.MainActivity.pojoCodecRegistry;
 import static com.example.myloginapplication.RegisterActivity.member;
@@ -16,12 +17,17 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myloginapplication.Model.Admin;
 import com.example.myloginapplication.Model.Member;
+import com.example.myloginapplication.Model.Readings;
 import com.example.myloginapplication.Model.Voucher;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.bson.Document;
+
+import java.util.Collections;
+
 import io.realm.mongodb.mongo.MongoCollection;
 
 public class PaymentActivity extends AppCompatActivity {
@@ -53,13 +59,14 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
+//        calculateBill();
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(balance>=bill) {
                     double currentBalance = balance - bill;
                     member.setBalance(currentBalance);
-                    member.setBill(0.0);
+                    member.setBill(member.getBill());
                     textbalance.setText("Your balance is " + currentBalance);
                     textbill.setText("Your current bill value is 0.0");
                 }else{
@@ -91,6 +98,45 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+
+//    private void calculateBill() {
+//        MongoCollection<Readings> readingsMongoCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
+//        Document queryReading = new Document("userEmail",member.getEmailId());
+//        readingsMongoCollection.findOne(queryReading).getAsync(task -> {
+//            if(task.isSuccess()){
+//                Readings readings = (Readings) task.get();
+//                if(readings != null){
+//                    MongoCollection<Admin> adminMongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
+//                    Document queryAdmin = new Document("loggedEmail","gse@shangrila.gov.un");
+//                    adminMongoCollection.findOne(queryAdmin).getAsync(value -> {
+//                        if(value.isSuccess()) {
+//                            Admin admin = (Admin) value.get();
+//                            if (admin != null) {
+//                                double bill = readings.getElecDay() * admin.getPriceDay() + readings.getElecNight() * admin.getPriceNight()
+//                                        + readings.getGas() * admin.getPriceGas() + 0.74 * 30;
+//                                Log.v("Bill", String.valueOf(bill));
+////                                member.setBill(bill);
+//                                MongoCollection<Member> memberMongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+//                                Document queryMember = new Document("emailId",member.getEmailId());
+//                                memberMongoCollection.updateOne(queryMember,member.setBill(bill)).getAsync(result -> {
+//                                    if(result.isSuccess()){
+//                                        Log.v("Bill","Bill set successfully");
+//                                    }else{
+//                                        Log.v("Bill",result.getError().toString());
+//                                    }
+//                                });
+//                                Toast.makeText(PaymentActivity.this,"Bill is "+bill,Toast.LENGTH_LONG).show();
+//                            }else{
+//                                Log.v("Admin","Admin is Null");
+//                            }
+//                        }else{
+//                            Log.v("Admin",value.getError().toString());
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
 
     private void qrscanner() {
         ScanOptions options = new ScanOptions();

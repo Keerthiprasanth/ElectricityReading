@@ -1,5 +1,7 @@
 package com.example.myloginapplication;
 
+import static com.example.myloginapplication.MainActivity.mongoDatabase;
+import static com.example.myloginapplication.MainActivity.pojoCodecRegistry;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -15,9 +17,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myloginapplication.Model.Admin;
 import com.example.myloginapplication.Model.Member;
 import com.example.myloginapplication.Model.Readings;
 
+import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
@@ -37,7 +41,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     private DatePickerDialog datePickerDialog;
     Readings readings;
     String emailID = SignInActivity.mem.getEmailId();
-    Member member = RegisterActivity.loggedMember;
+    Member member = SignInActivity.mem;
     Member mem = SignInActivity.loggedMember;
     Member loggedMember;
 
@@ -58,6 +62,8 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         }else{
             loggedMember = member;
         }
+
+        calculateBill();
 
         datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +160,45 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             Toast.makeText(DashboardActivity.this,"All the fields are required",Toast.LENGTH_LONG).show();
         }
         return false;
+    }
+
+    private void calculateBill() {
+        MongoCollection<Readings> readingsMongoCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
+        Document queryReading = new Document("userEmail",member.getEmailId());
+        readingsMongoCollection.findOne(queryReading).getAsync(task -> {
+            if(task.isSuccess()){
+                Readings readings = (Readings) task.get();
+                if(readings != null){
+                    MongoCollection<Admin> adminMongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
+                    Document queryAdmin = new Document("loggedEmail","gse@shangrila.gov.un");
+                    adminMongoCollection.findOne(queryAdmin).getAsync(value -> {
+                        if(value.isSuccess()) {
+                            Admin admin = (Admin) value.get();
+                            if (admin != null) {
+                                double bill = readings.getElecDay() * admin.getPriceDay() + readings.getElecNight() * admin.getPriceNight()
+                                        + readings.getGas() * admin.getPriceGas() + 0.74 * 30;
+                                Log.v("Bill", String.valueOf(bill));
+//                                member.setBill(bill);
+                                MongoCollection<Member> memberMongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+                                Document queryMember = new Document("emailId",member.getEmailId());
+                                memberMongoCollection.updateOne(queryMember,member.setBill(bill)).getAsync(result -> {
+                                    if(result.isSuccess()){
+                                        Log.v("Bill","Bill set successfully");
+                                    }else{
+                                        Log.v("Bill",result.getError().toString());
+                                    }
+                                });
+                                Toast.makeText(DashboardActivity.this,"Bill is "+bill,Toast.LENGTH_LONG).show();
+                            }else{
+                                Log.v("Admin","Admin is Null");
+                            }
+                        }else{
+                            Log.v("Admin",value.getError().toString());
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
