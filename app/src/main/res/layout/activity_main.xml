@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +15,8 @@
         android:layout_marginEnd="50dp"
         android:fontFamily="serif"
         android:textStyle="bold"
-        android:text="WELCOME"
+        android:text="WELCOME to Shangrila"
+        android:textAllCaps="true"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="40sp" />
@@ -75,20 +75,4 @@
         android:text="@string/sign_in"
         android:textColor="@color/white" />
 
-
-<!--    <Button-->
-<!--        android:id="@+id/dashboardbtn"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_marginStart="50dp"-->
-<!--        android:layout_marginEnd="50dp"-->
-<!--        android:layout_marginBottom="25dp"-->
-<!--        android:backgroundTint="@color/black"-->
-<!--        android:paddingLeft="25dp"-->
-<!--        android:paddingTop="10dp"-->
-<!--        android:paddingRight="25dp"-->
-<!--        android:paddingBottom="10dp"-->
-<!--        android:text="Dashboard" />-->
 </RelativeLayout>

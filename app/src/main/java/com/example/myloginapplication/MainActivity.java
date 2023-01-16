@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-//        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
-//                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         Realm.init(this);
         app =new App(new AppConfiguration.Builder(appId).build());
 
@@ -64,11 +61,9 @@ public class MainActivity extends AppCompatActivity {
         pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
                 fromProviders(PojoCodecProvider.builder().automatic(true).build()));
         mongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
-//        mongoDatabase = mongoDatabase.withCodecRegistry(pojoCodecRegistry);
 
         Button signupbtn = findViewById(R.id.signupbtn);
         Button signinbtn = findViewById(R.id.signinbtn);
-//        Button dashboard = findViewById(R.id.dashboardbtn);
 
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 opensignin();
             }
         });
-
-//        dashboard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                opendashboard();
-//            }
-//        });
     }
 
     public void openregister(){
@@ -99,11 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void opensignin(){
         Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-    }
-
-    public void opendashboard(){
-        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 }

@@ -59,20 +59,6 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
                 if(!validatefields(datebtn,priceday,pricenight,pricegas,pricestandard)){
                     return;
                 }
-//                if(!validateday(priceday)){
-//                    return;
-//                }
-//                if(!validatenight(pricenight)){
-//                    return;
-//                }
-//                if(!validategas(pricegas)){
-//                    return;
-//                }
-//                if(!validateday(priceday) && !validatenight(pricenight) && !validategas(pricegas)){
-//                    return;
-//                }
-//                CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
-//                        fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Admin> mongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
                 mongoCollection.insertOne(admin).getAsync(result -> {
                     if(result.isSuccess()){
@@ -92,36 +78,7 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
             }
         });
     }
-    private boolean validateday(TextView priceday) {
-        try {
-            dayprize = Double.parseDouble(priceday.getText().toString());
-            admin.setPriceDay(dayprize);
-            return true;
-        }catch (NumberFormatException ex){
-            priceday.setError("Required");
-        }
-        return false;
-    }
-    private boolean validatenight(TextView pricenight) {
-        try {
-            nightprize = Double.parseDouble(pricenight.getText().toString());
-            admin.setPriceNight(nightprize);
-            return true;
-        }catch (NumberFormatException ex){
-            pricenight.setError("Required");
-        }
-        return false;
-    }
-    private boolean validategas(TextView pricegas) {
-        try {
-            gasprize = Double.parseDouble(pricegas.getText().toString());
-            admin.setPriceGas(gasprize);
-            return true;
-        }catch (NumberFormatException ex){
-            pricegas.setError("Required");
-        }
-        return false;
-    }
+
     private boolean validatefields(TextView datebtn, TextView priceday, TextView pricenight, TextView pricegas, TextView pricestandard) {
         try {
             if (loggedMember != null) {
@@ -150,10 +107,8 @@ public class AdmindashboardActivity extends AppCompatActivity implements DatePic
         calendar.set(Calendar.DATE, day);
         Toast.makeText(AdmindashboardActivity.this,"Date - "+day+(month+1)+year,Toast.LENGTH_LONG).show();
         String datefinal = String.valueOf(day)+" "+String.valueOf(month+1)+" "+String.valueOf(year);
-//        String datefinal = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
         TextView datebtn = findViewById(R.id.datebtn);
         datebtn.setText(datefinal);
-//        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
     }
 
     public void openReadings(){

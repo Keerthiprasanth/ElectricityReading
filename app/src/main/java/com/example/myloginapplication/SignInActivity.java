@@ -19,7 +19,6 @@ import java.security.MessageDigest;
 import java.util.Locale;
 
 public class SignInActivity extends AppCompatActivity {
-    int flag=0;
     static Member loggedMember;
     static Member mem;
     @Override
@@ -46,7 +45,6 @@ public class SignInActivity extends AppCompatActivity {
                         if(mem != null) {
                             if (mem.isAdmin()) {
                                 if (hash.equals(mem.getPassword())) {
-//                            flag = 1;
                                     loggedMember = mem;
                                     openAdmindashboard();
                                 } else {
@@ -54,7 +52,6 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             } else {
                                 if (hash.equals(mem.getPassword())) {
-//                            flag = 1;
                                     loggedMember = mem;
                                     opendashboard();
                                 } else {
@@ -66,19 +63,6 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
-//                Member member1 = new Member();
-//                for (Member member: memberList) {
-//                    if (email.getText().toString().equals(member.getEmailId()) && password.getText().toString().equals(member.getPassword())) {
-//                        flag=1;
-//                        member1 = member;
-//                    }
-//                }
-//                if(flag==1){
-//                    Toast.makeText(SignInActivity.this, "Welcome to Break Up! "+member1.getName(), Toast.LENGTH_LONG).show();
-//                    opendashboard();
-//                }else{
-//                    Toast.makeText(SignInActivity.this, "Enter valid credentials", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
@@ -104,7 +88,7 @@ public class SignInActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
-    //////////////////////////
+
     public static String hashing(String password) {
         String result = null;
         try {
@@ -117,12 +101,10 @@ public class SignInActivity extends AppCompatActivity {
         return result;
     }
     private static String bytesToHex(byte[] hash) {
-// return DatatypeConverter.printHexBinary(hash);
         final StringBuilder builder=new StringBuilder();
         for(byte b:hash) {
             builder.append(String.format("%02x", b));
         }
         return builder.toString();
     }
-    ///////////////////////////////
 }

@@ -40,16 +40,12 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 public class RegisterActivity extends AppCompatActivity {
     static Member member;
-//    static final List<Member> memberList = new ArrayList<>();
     String name, email, password, address, type, evc;
     int rooms;
-    int flag;
     static Member loggedMember;
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
-    MongoClient mongoClient = MainActivity.mongoClient;
     MongoCollection<Member> mongoCollection = MainActivity.mongoCollection;
     CodecRegistry pojoCodecRegistry = MainActivity.pojoCodecRegistry;
-    User user;
     Double balance;
     TextView registernoofrooms;
 
@@ -67,16 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
         TextView scanner = findViewById(R.id.scanner);
 
         Spinner propertyType = findViewById(R.id.propertytype);
-//        AutoCompleteTextView spinType = findViewById(R.id.spin);
 
         String[] propertyTypes = getResources().getStringArray(R.array.property_type);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.property_file, propertyTypes);
         adapter.setDropDownViewResource(R.layout.property_file);
         propertyType.setAdapter(adapter);
-
-//        ArrayAdapter adapterSpin = new ArrayAdapter(this, android.R.layout.simple_spinner_item, propertyTypes);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinType.setAdapter(adapterSpin);
 
         propertyType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -102,31 +93,23 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 member = new Member();
-//                List<Member> memberList = new ArrayList<>();
                 Log.v("BTN","Entered BTN");
                 name = registerName.getText().toString();
                 email = registerMail.getText().toString().toLowerCase(Locale.ROOT);
                 password = registerPassword.getText().toString();
                 address = registerAddress.getText().toString();
-//                rooms = Integer.parseInt(registernoofrooms.getText().toString());
                 evc = registerevc.getText().toString();
 
-//                validaterooms(registernoofrooms);
                 if (!validatefields(registerName, registerAddress, registerPassword, registerMail, registernoofrooms, registerevc)) {
                     return;
                 }
-//                validaterooms(registernoofrooms);
-//                checkUser();
 
                 member.setName(name);
-//                memberList.add(member);
                 member.setPassword(hashing(password));
                 member.setEmailId(email);
                 member.setAddress(address);
                 member.setPropertytype(type);
                 member.setEvc(evc);
-//                member.setNoofrooms(validaterooms(registernoofrooms));
-//                validateEvc(registerevc);
 
                 try {
                     rooms = Integer.parseInt(registernoofrooms.getText().toString());
@@ -137,52 +120,15 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 member.setNoofrooms(rooms);
 
-//                try {
-//                    MongoCollection<Voucher> Collection = mongoDatabase.getCollection("voucher",Voucher.class).withCodecRegistry(pojoCodecRegistry);
-//                    Document queryEvc = new Document("evc", evc);
-//                    Collection.findOne(queryEvc).getAsync(task -> {
-//                        if (task.isSuccess()) {
-//                            Voucher voucher = (Voucher) task.get();
-//                            if(voucher != null){
-//                                if (evc.equals(voucher.getVoucher())){
-//                                    balance = 200.0;
-//                                    member.setBalance(balance);
-//                                }
-//                            }else {
-//                                registerevc.setError("Voucher is invalid");
-//                                return;
-//                            }
-//                        }
-//                    });
-//                }catch (NullPointerException ex){
-//                    Log.v("Voucher","Null Pointer Exception");
-//                    registerevc.setError("Voucher is invalid");
-//                    return;
-//                }
-
-//                try {
-//                    if (member.getBalance() == 0) {
-//                        registerevc.setError("Enter a valid Voucher code");
-//                        return;
-//                    }
-//                }catch (NullPointerException ex){
-//                    Log.v("Balance","Null Pointer Exception");
-//                    registerevc.setError("Enter a valid EVC");
-//                    return;
-//                }
-
                 try {
                     Document queryFilter = new Document("emailId", email);
                     mongoCollection.findOne(queryFilter).getAsync(task -> {
                         if (task.isSuccess()) {
                         Member mem = (Member) task.get();
                         if(mem != null) {
-//                            userEmail = task.get().getEmailId();
-//                    userEmail = mem.getEmailId();
                             if (email.equals(task.get().getEmailId())) {
                                 Log.v("User", "User Exists");
                                 Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
-//                    opensignin();
                             }
                         }else {
                             MongoCollection<Voucher> Collection = mongoDatabase.getCollection("voucher",Voucher.class).withCodecRegistry(pojoCodecRegistry);
@@ -229,38 +175,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-//    private void validateEvc(TextView registerEvc) {
-//        MongoCollection<Document> Collection = mongoDatabase.getCollection("voucher").withCodecRegistry(pojoCodecRegistry);
-//        Document queryFilter  = new Document("evc", this.evc);
-//        Collection.findOne(queryFilter).getAsync(task -> {
-//            if (task.isSuccess()) {
-//                String voucher= String.valueOf(task.get());
-//                if(this.evc.equals(voucher)) {
-//                    member.setEvc(evc);
-//                }
-//            }else{
-//                registerEvc.setError("Voucher is invalid");
-//            }
-//        });
-//    }
-
-    private void checkUser() {
-        Document queryFilter  = new Document("emailId", this.email);
-        mongoCollection.findOne(queryFilter).getAsync(task -> {
-            if (task.isSuccess()) {
-                Member member = (Member) task.get();
-                if(member != null) {
-                    Log.v("User", "User Exists");
-                    Toast.makeText(RegisterActivity.this, "User already exists! Try signing in", Toast.LENGTH_LONG).show();
-                    opensignin();
-                }
-                else{
-                    Log.v("User","User does not exist");
-                }
-            }
-        });
-    }
-
     private void qrscanner() {
         ScanOptions options = new ScanOptions();
         options.setBeepEnabled(true);
@@ -273,19 +187,6 @@ public class RegisterActivity extends AppCompatActivity {
         if (result.getContents() != null) {
             TextView registerevc = findViewById(R.id.registerevc);
             registerevc.setText(result.getContents());
-//            evcset(result.getContents());
-//            AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-//            builder.setTitle("Result");
-//            builder.setMessage(result.getContents());
-//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    evcset(result.getContents());
-//                    dialogInterface.dismiss();
-//                }
-//            }).show();
-//            member.setEvc(evcscan);
-//            Toast.makeText( RegisterActivity.this, member.getEvc(), Toast.LENGTH_LONG).show();
         }
     });
 
@@ -304,24 +205,11 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-//        validateEvc(registerevc);
-//        validaterooms(registernoofrooms);
         return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty();
     }
 
-
-//    public void evcset(String evcset){
-//        TextView registerevc = findViewById(R.id.registerevc);
-//        registerevc.setText(evcset);
-//    }
-
     public void opensignin(){
         Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-    }
-
-    public void opendashboard(){
-        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
     }
 
@@ -330,24 +218,6 @@ public class RegisterActivity extends AppCompatActivity {
         return Pattern.matches(passwordRegex, password);
     }
 
-    public int validaterooms(TextView registernoofrooms){
-        try {
-//            if (Integer.parseInt(registernoofrooms.getText().toString()) < 1) {
-//                Log.v("Result","It is a number");
-                rooms = Integer.parseInt(registernoofrooms.getText().toString());
-//                member.setNoofrooms(rooms);
-//            }
-        }catch (NumberFormatException ex){
-//            Log.v("Result","Not a number");
-            registernoofrooms.setText("1");
-            rooms = Integer.parseInt(registernoofrooms.getText().toString());
-//            member.setNoofrooms(rooms);
-            registernoofrooms.setError("Rooms should not be less than 1");
-//            validaterooms(registernoofrooms);
-        }
-        return rooms;
-    }
-    //////////////////////
     public static String hashing(String password) {
         String result = null;
         try {
@@ -360,12 +230,10 @@ public class RegisterActivity extends AppCompatActivity {
         return result;
     }
     private static String bytesToHex(byte[] hash) {
-// return DatatypeConverter.printHexBinary(hash);
         final StringBuilder builder=new StringBuilder();
         for(byte b:hash) {
             builder.append(String.format("%02x", b));
         }
         return builder.toString();
     }
-    //////////////////
 }

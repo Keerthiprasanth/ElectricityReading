@@ -64,25 +64,6 @@ public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.ViewHo
             }
         });
 
-//        FindIterable<Readings> iterDoc = collection.find();
-//        iterDoc.forEach(new Block<Readings>() {
-//            @Override
-//            public void apply(Readings reading) {
-//                System.out.println(reading);
-//            }
-//        });
-//        Iterator<Readings> it = iterDoc.iterator();
-//        while (it.hasNext()) {
-//            System.out.println(it.next());
-//        }
-
-//        for (int j=0;j<=2;j++) {
-//            reading = collection.find();
-//        }
-//        for(int j=0;j<readList.size();j++){
-//            Readings read = readList(j);
-//        }
-
 //        for(int i=0;i<readingsList.size();i++){
         if (dataChanged && readingsList != null && readingsList.size() > 0) {
             dataChanged = false;
@@ -106,17 +87,6 @@ public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.ViewHo
             holder.gasReading.setText(String.valueOf("Null"));
         }
 //    }
-
-//        reading.setDate("2 2 2");
-//        readingsList.add(reading);
-//        reading.setUserEmail("email");
-//        reading.setElecDay(12);
-//        reading.setElecNight(23);
-//        reading.setGas(34);
-//
-//        for(int i=0;i<=20;i++){
-//            readingsList.add(reading);
-//        }
     }
 
     @Override

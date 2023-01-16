@@ -36,7 +36,7 @@ public class PaymentActivity extends AppCompatActivity {
     String name = SignInActivity.mem.getName();
     Member loggedmember = SignInActivity.mem;
     Member member;
-    Double bill = member.getBill();
+    Double bill = loggedmember.getBill();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +62,8 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        textbalance.setText("Welcome "+name+" Your balance is "+member.getBalance());
-        textbill.setText("Your current bill value is "+member.getBill());
+        textbalance.setText("Welcome "+name+" Your balance is "+loggedmember.getBalance());
+        textbill.setText("Your current bill value is "+loggedmember.getBill());
 
         scanner.setOnClickListener(new View.OnClickListener() {
             @Override

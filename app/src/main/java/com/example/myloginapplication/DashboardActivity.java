@@ -39,11 +39,11 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     MongoDatabase mongoDatabase = MainActivity.mongoDatabase;
     private DatePickerDialog datePickerDialog;
     Readings readings;
-    String emailID = SignInActivity.mem.getEmailId();
     Member member = SignInActivity.mem;
     Member mem = SignInActivity.loggedMember;
     Member loggedMember;
     int flag = 0;
+    Double day,night,gas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,20 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             loggedMember = member;
         }
 
+        MongoCollection<Readings> readingsCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
+        Document lastAddedReading= new Document(new Document("elecDay", 34));
+        readingsCollection.find().sort(lastAddedReading).first().getAsync(last -> {
+            if(last.isSuccess()){
+                Readings data = last.get();
+                if(data!=null){
+                    Log.v("Data",data.getDate());
+                }
+            }
+            else{
+                Log.v("Data",last.getError().toString());
+            }
+        });
+
         calculateBill();
 
         datebtn.setOnClickListener(new View.OnClickListener() {
@@ -77,19 +91,9 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             @Override
             public void onClick(View view) {
                 readings = new Readings();
-//                readings.setDate(datebtn.getText().toString());
-//                readings.setElecDay(validateday(textday));
-//                nightreading = Double.parseDouble(textnight.getText().toString());
-//                readings.setElecNight(nightreading);
-//                gasreading = Double.parseDouble(textgas.getText().toString());
-//                readings.setGas(gasreading);
-//                readingList.add(readings);
                 if(!validatefields(datebtn,textday,textnight,textgas)){
                     return;
                 }
-//                if(!validateday(textday) && !validatenight(textnight) && !validategas(textgas)){
-//                    return;
-//                }
                 CodecRegistry pojoCodecRegistry = fromRegistries(AppConfiguration.DEFAULT_BSON_CODEC_REGISTRY,
                         fromProviders(PojoCodecProvider.builder().automatic(true).build()));
                 MongoCollection<Readings> mongoCollection = mongoDatabase.getCollection("readings",Readings.class).withCodecRegistry(pojoCodecRegistry);
@@ -118,7 +122,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     private boolean validatefields(TextView datebtn,TextView textday, TextView textnight, TextView textgas) {
         try {
             if(loggedMember != null) {
-                readings.setUserEmail(emailID);
+                readings.setUserEmail(member.getEmailId());
                 readings.setDate(datebtn.getText().toString());
                 dayreading = Double.parseDouble(textday.getText().toString());
                 readings.setElecDay(dayreading);
@@ -126,6 +130,9 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                 readings.setElecNight(nightreading);
                 gasreading = Double.parseDouble(textgas.getText().toString());
                 readings.setGas(gasreading);
+                day = Double.parseDouble(textday.getText().toString());
+                night = Double.parseDouble(textnight.getText().toString());
+                gas = Double.parseDouble(textgas.getText().toString());
                 flag=0;
                 return true;
             }
@@ -148,10 +155,9 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                         if(last.isSuccess()){
                             Admin admin = (Admin) last.get();
                             if(admin!=null){
-                                double bill = readings.getElecDay() * admin.getPriceDay() + readings.getElecNight() * admin.getPriceNight()
-                                        + readings.getGas() * admin.getPriceGas() + 0.74 * 30;
+                                double bill = (day - readings.getElecDay()) * admin.getPriceDay() + (readings.getElecNight()) * admin.getPriceNight()
+                                        + (gas - readings.getGas()) * admin.getPriceGas() + 0.74 * 30;
                                 Log.v("Bill", String.valueOf(bill));
-//                                member.setBill(bill);
                                 MongoCollection<Member> memberMongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
                                 Document queryMember = new Document("emailId",member.getEmailId());
                                 Document updateDocument = new Document("$set", new Document("bill",bill));
@@ -176,6 +182,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                 flag = 1;
             }
         });
+
     }
 
     @Override
@@ -186,10 +193,8 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
         calendar.set(Calendar.DATE, day);
         Toast.makeText(DashboardActivity.this,"Date - "+day+(month+1)+year,Toast.LENGTH_LONG).show();
         String datefinal = String.valueOf(day)+" "+String.valueOf(month+1)+" "+String.valueOf(year);
-//        String datefinal = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime());
         TextView datebtn = findViewById(R.id.datebtn);
         datebtn.setText(datefinal);
-//        datebtn.setText(day+"/"+(Integer.parseInt(String.valueOf(month))+1)+"/"+year);
     }
 
     public void openPayment(){
