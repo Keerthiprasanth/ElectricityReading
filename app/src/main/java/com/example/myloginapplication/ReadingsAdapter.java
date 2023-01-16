@@ -60,33 +60,34 @@ public class ReadingsAdapter extends RecyclerView.Adapter<ReadingsAdapter.ViewHo
                 MongoCursor<Readings> read = task.get();
                 read.forEachRemaining(readingsList::add);
                 read.close();
-                dataChanged = true;
+//                dataChanged = true;
+                //        for(int i=0;i<readingsList.size();i++){
+                if (readingsList != null && readingsList.size() > 0) {
+//                    dataChanged = false;
+//                    notifyDataSetChanged();
+                    for (int i = 0; i < readingsList.size(); i++) {
+                        if (position < readingsList.size()) {
+                            Readings readings = readingsList.get(i);
+//            Readings model = readingsList.get(position);
+                            holder.customerID.setText(readings.getUserEmail());
+                            holder.date.setText(readings.getDate());
+                            holder.dayReading.setText(String.valueOf(readings.getElecDay()));
+                            holder.nightReading.setText(String.valueOf(readings.getElecNight()));
+                            holder.gasReading.setText(String.valueOf(readings.getGas()));
+                        }
+                    }
+                } else {
+                    holder.customerID.setText("Null");
+                    holder.date.setText("Null");
+                    holder.dayReading.setText(String.valueOf("Null"));
+                    holder.nightReading.setText(String.valueOf("Null"));
+                    holder.gasReading.setText(String.valueOf("Null"));
+                }
+//    }
             }
         });
 
-//        for(int i=0;i<readingsList.size();i++){
-        if (dataChanged && readingsList != null && readingsList.size() > 0) {
-            dataChanged = false;
-            notifyDataSetChanged();
-            for (int i = 0; i < readingsList.size(); i++) {
-                if (position < readingsList.size()) {
-                    Readings readings = readingsList.get(position);
-//            Readings model = readingsList.get(position);
-                    holder.customerID.setText(readings.getUserEmail());
-                    holder.date.setText(readings.getDate());
-                    holder.dayReading.setText(String.valueOf(readings.getElecDay()));
-                    holder.nightReading.setText(String.valueOf(readings.getElecNight()));
-                    holder.gasReading.setText(String.valueOf(readings.getGas()));
-                }
-            }
-        } else {
-            holder.customerID.setText("Null");
-            holder.date.setText("Null");
-            holder.dayReading.setText(String.valueOf("Null"));
-            holder.nightReading.setText(String.valueOf("Null"));
-            holder.gasReading.setText(String.valueOf("Null"));
-        }
-//    }
+
     }
 
     @Override

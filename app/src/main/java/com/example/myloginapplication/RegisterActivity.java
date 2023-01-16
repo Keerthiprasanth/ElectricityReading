@@ -138,22 +138,67 @@ public class RegisterActivity extends AppCompatActivity {
                                     Voucher voucher = (Voucher) value.get();
                                     if(voucher != null){
                                         if (evc.equals(voucher.getEvc())){
-                                            balance = 200.0;
-                                            member.setBalance(balance);
-                                            mongoCollection.insertOne(member).getAsync(result -> {
-                                                if (result.isSuccess()) {
-                                                    loggedMember = member;
-                                                    Log.v("Data", "Data inserted");
-                                                    Toast.makeText(RegisterActivity.this, "Registered Successfully! Try signing in", Toast.LENGTH_LONG).show();
-                                                    opensignin();
-                                                } else {
-                                                    Log.v("Data", "Error:" + result.getError().toString());
-                                                }
-                                            });
+                                            registerevc.setError("Voucher already exists");
+//                                            balance = 200.0;
+//                                            member.setBalance(balance);
+//                                            mongoCollection.insertOne(member).getAsync(result -> {
+//                                                if (result.isSuccess()) {
+//                                                    loggedMember = member;
+//                                                    Log.v("Data", "Data inserted");
+//                                                    Toast.makeText(RegisterActivity.this, "Registered Successfully! Try signing in", Toast.LENGTH_LONG).show();
+//                                                    opensignin();
+//                                                } else {
+//                                                    Log.v("Data", "Error:" + result.getError().toString());
+//                                                }
+//                                            });
                                         }
-                                    }else {
-                                        registerevc.setError("Voucher is invalid");
                                     }
+                                    else{
+                                        Voucher newVoucher = new Voucher();
+                                        newVoucher.setEvc(evc);
+                                        Collection.insertOne(newVoucher).getAsync(evc -> {
+                                            if(evc.isSuccess()){
+                                                Log.v("NewEVC","EVC added");
+                                            }else{
+                                                Log.v("NewEVC",evc.getError().toString());
+                                            }
+                                        });
+                                        balance = 200.0;
+                                        member.setBalance(balance);
+                                        mongoCollection.insertOne(member).getAsync(result -> {
+                                            if (result.isSuccess()) {
+                                                loggedMember = member;
+                                                Log.v("Data", "Data inserted");
+                                                Toast.makeText(RegisterActivity.this, "Registered Successfully! Try signing in", Toast.LENGTH_LONG).show();
+                                                opensignin();
+                                            } else {
+                                                Log.v("Data", "Error:" + result.getError().toString());
+                                            }
+                                        });
+//                                        registerevc.setError("Voucher is invalid");
+                                    }
+                                }else{
+                                    Voucher voucher = new Voucher();
+                                    voucher.setEvc(evc);
+                                    Collection.insertOne(voucher).getAsync(evc -> {
+                                        if(evc.isSuccess()){
+                                            Log.v("NewEVC","EVC added");
+                                        }else{
+                                            Log.v("NewEVC",evc.getError().toString());
+                                        }
+                                    });
+                                    balance = 200.0;
+                                    member.setBalance(balance);
+                                    mongoCollection.insertOne(member).getAsync(result -> {
+                                        if (result.isSuccess()) {
+                                            loggedMember = member;
+                                            Log.v("Data", "Data inserted");
+                                            Toast.makeText(RegisterActivity.this, "Registered Successfully! Try signing in", Toast.LENGTH_LONG).show();
+                                            opensignin();
+                                        } else {
+                                            Log.v("Data", "Error:" + result.getError().toString());
+                                        }
+                                    });
                                 }
                             });
                             }
@@ -205,7 +250,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (address.isEmpty()) {
             registerAddress.setError("Please enter your address");
         }
-        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty();
+        if (evc.isEmpty()){
+            registerevc.setError("Please enter a valid EVC");
+        }
+        return !name.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && passwordValidation(password) && !address.isEmpty() && !evc.isEmpty();
     }
 
     public void opensignin(){

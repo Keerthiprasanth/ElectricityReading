@@ -42,8 +42,9 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
     Member member = SignInActivity.mem;
     Member mem = SignInActivity.loggedMember;
     Member loggedMember;
+    static Member dashBoardMember;
     int flag = 0;
-    Double day,night,gas;
+    Double day=0.0,night=0.0,gas=0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             }
         });
 
-        calculateBill();
+//        calculateBill();
 
         datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +114,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             public void onClick(View view) {
                 calculateBill();
                 if(flag == 1) {
+                    dashBoardMember = member;
                     openPayment();
                 }
             }
@@ -149,6 +151,18 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
             if(task.isSuccess()){
                 Readings readings = (Readings) task.get();
                 if(readings != null){
+                    if(day<readings.getElecDay()){
+                        Toast.makeText(DashboardActivity.this,"Day readings should be higher than previous reading",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(night<readings.getElecNight()){
+                        Toast.makeText(DashboardActivity.this,"Night readings should be higher than previous reading",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(gas<readings.getGas()){
+                        Toast.makeText(DashboardActivity.this,"Gas readings should be higher than previous reading",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     MongoCollection<Admin> adminMongoCollection = mongoDatabase.getCollection("admin",Admin.class).withCodecRegistry(pojoCodecRegistry);
                     Document lastAddedObject= new Document(new Document("_id", -1));
                     adminMongoCollection.find().sort(lastAddedObject).first().getAsync(last -> {
@@ -163,6 +177,7 @@ public class DashboardActivity extends AppCompatActivity implements DatePickerDi
                                 Document updateDocument = new Document("$set", new Document("bill",bill));
                                 memberMongoCollection.updateOne(queryMember,updateDocument).getAsync(result -> {
                                     if(result.isSuccess()){
+                                        member.setBill(bill);
                                         Log.v("Bill","Bill set successfully");
                                         flag=1;
                                     }else{

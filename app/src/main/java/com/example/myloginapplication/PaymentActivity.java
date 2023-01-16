@@ -34,7 +34,7 @@ public class PaymentActivity extends AppCompatActivity {
     Double balance = SignInActivity.mem.getBalance();
     String evc;
     String name = SignInActivity.mem.getName();
-    Member loggedmember = SignInActivity.mem;
+    Member loggedmember = DashboardActivity.dashBoardMember;
     Member member;
     Double bill = loggedmember.getBill();
 
