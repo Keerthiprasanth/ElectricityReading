@@ -32,10 +32,12 @@ import io.realm.mongodb.mongo.MongoCollection;
 
 public class PaymentActivity extends AppCompatActivity {
     Double balance = SignInActivity.mem.getBalance();
-    Double bill = SignInActivity.mem.getBill();
     String evc;
     String name = SignInActivity.mem.getName();
-    Member member = SignInActivity.mem;
+    Member loggedmember = SignInActivity.mem;
+    Member member;
+    Double bill = member.getBill();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +51,19 @@ public class PaymentActivity extends AppCompatActivity {
         Button pay = findViewById(R.id.paybtn);
         Button submit = findViewById(R.id.voucherbtn);
 
-        textbalance.setText("Welcome "+name+" Your balance is "+balance);
-        textbill.setText("Your current bill value is "+bill);
+        MongoCollection<Member> memberMongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+        Document queryMember = new Document("emailId",loggedmember.getEmailId());
+        memberMongoCollection.findOne(queryMember).getAsync(task -> {
+            if(task.isSuccess()){
+                member = (Member) task.get();
+                if(member!=null){
+                    Log.v("Member","Member");
+                }
+            }
+        });
+
+        textbalance.setText("Welcome "+name+" Your balance is "+member.getBalance());
+        textbill.setText("Your current bill value is "+member.getBill());
 
         scanner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +71,6 @@ public class PaymentActivity extends AppCompatActivity {
                 qrscanner();
             }
         });
-
 //        calculateBill();
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +78,20 @@ public class PaymentActivity extends AppCompatActivity {
                 if(balance>=bill) {
                     double currentBalance = balance - bill;
                     member.setBalance(currentBalance);
-                    member.setBill(member.getBill());
+                    member.setBill(0.0);
                     textbalance.setText("Your balance is " + currentBalance);
-                    textbill.setText("Your current bill value is 0.0");
+                    textbill.setText("Your current bill value is "+ 0.0);
+                    MongoCollection<Member> memberMongoCollection = mongoDatabase.getCollection("member",Member.class).withCodecRegistry(pojoCodecRegistry);
+                    Document queryMember = new Document("emailId",member.getEmailId());
+                    Document updateDocument = new Document().append("$set", new Document().append("bill",bill).append("balance",currentBalance));
+
+                    memberMongoCollection.updateOne(queryMember,updateDocument).getAsync(result -> {
+                        if(result.isSuccess()){
+                            Log.v("Bill","Bill set successfully");
+                        }else{
+                            Log.v("Bill",result.getError().toString());
+                        }
+                    });
                 }else{
                     Toast.makeText(PaymentActivity.this,"Insufficient Balance",Toast.LENGTH_LONG).show();
                 }
