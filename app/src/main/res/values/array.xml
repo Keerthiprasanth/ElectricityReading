@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="property_type">
+        <item>Detached</item>
+        <item>Semi-detached</item>
+        <item>Terraced</item>
+        <item>Flat</item>
+        <item>Cottage</item>
+        <item>Bungalow</item>
+        <item>Mansion</item>
+    </string-array>
+</resources>

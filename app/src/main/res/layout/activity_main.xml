@@ -1,73 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img"
+    android:background="@drawable/bg"
     tools:context=".MainActivity">
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@id/username"
-        android:autofillHints=""
-        android:ems="10"
-        android:inputType="textPassword"
-        android:singleLine="false"
-        android:soundEffectsEnabled="true"
-        android:text="@string/password"
-        android:textColor="#FFFFFF"
-        android:textColorLink="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:padding="20dp"
-        tools:ignore="LabelFor,TextFields"
-        android:drawableStart="@drawable/ic_baseline_password_24"
-        android:drawablePadding="20dp"/>
-
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:layout_centerVertical="true"
-        android:text="@string/username"
-        android:textColor="#FFFFFF"
-        android:textColorLink="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_margin="10dp"
-        android:padding="20dp"
-        tools:ignore="LabelFor"
-        android:drawableStart="@drawable/ic_baseline_person_24"
-        android:drawablePadding="20dp"/>
 
     <TextView
         android:id="@+id/break_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
         android:fontFamily="serif"
-        android:text="WELCOME TO BREAK UP"
+        android:textStyle="bold"
+        android:text="WELCOME to Shangrila"
+        android:textAllCaps="true"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="40sp"
-        android:textStyle="bold|italic"
-        android:typeface="sans"
-        tools:text="WELCOME TO BREAK UP"
-        android:layout_margin="50dp"/>
+        android:textColor="@color/black"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/textsignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/signupbtn"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="New User?" />
+
+    <Button
+        android:id="@+id/signupbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:backgroundTint="@color/black"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="10dp"
+        android:text="@string/sign_up"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/textsignin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signupbtn"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="25dp"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="Already registered?" />
 
     <Button
         android:id="@+id/signinbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
+        android:layout_below="@+id/textsignin"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/black"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingRight="25dp"
+        android:paddingBottom="10dp"
         android:text="@string/sign_in"
-        android:textSize="25sp"
-        android:backgroundTint="@color/white"
-        android:textColor="#C87B5B"/>
+        android:textColor="@color/white" />
 
 </RelativeLayout>

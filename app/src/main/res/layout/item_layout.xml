@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:background="#72000000">
+
+        <TextView
+            android:id="@+id/cutomerId"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:text="Customer ID"
+            android:background="@drawable/table_bg"
+            android:textColor="@android:color/white"
+            android:padding="1sp"
+            android:textSize="14sp"
+            android:layout_weight="4"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:background="@drawable/table_bg"
+            android:textColor="@android:color/white"
+            android:padding="1sp"
+            android:textSize="14sp"
+            android:layout_weight="4"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Day"
+            android:background="@drawable/table_bg"
+            android:textColor="@android:color/white"
+            android:padding="1sp"
+            android:textSize="14sp"
+            android:layout_weight="4"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/night"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Night"
+            android:background="@drawable/table_bg"
+            android:textColor="@android:color/white"
+            android:padding="1sp"
+            android:textSize="14sp"
+            android:layout_weight="4"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/gas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Gas"
+            android:background="@drawable/table_bg"
+            android:textColor="@android:color/white"
+            android:padding="1sp"
+            android:textSize="14sp"
+            android:layout_weight="4"
+            android:gravity="center_horizontal"
+            />
+
+    </TableRow>
+
+</TableLayout>
